@@ -29,6 +29,13 @@ function switchScene(newScene = MENU_SCENE) {
     el.classList.add("hidden");
   });
   newScene.classList.remove("hidden");
+
+  // Custom tasks to run on each scene being switched to
+  if (newScene === NAME_SCENE) {
+    NAME_INPUT.focus();
+  } else if (newScene === MENU_SCENE) {
+    MENU_START_LINK.focus();
+  }
 }
 
 // Name scene
@@ -58,17 +65,18 @@ function getName() {
  * @param {Event} e 
  */
 function submitName(e) {
-  // If this is a keydown event, check if the key is Enter or Return before triggering
-  if (e.type === "keydown" && !(e.key === "Enter" || e.key === "Return"))
+  // If this is a keyup event, check if the key is Enter or Return before triggering
+  if (e.type === "keyup" && !(e.key === "Enter" || e.key === "Return"))
     return;
   setName(NAME_INPUT.value);
   switchScene(lastScene);
+  e.stopPropagation();
 }
 
 // Setup
 // -----
 
-NAME_INPUT.addEventListener("keydown", submitName);
+NAME_INPUT.addEventListener("keyup", submitName);
 NAME_SUBMIT.addEventListener("click", submitName);
 if (sessionStorage.getItem("name"))
   NAME_INPUT.value = getName();
@@ -82,6 +90,8 @@ if (sessionStorage.getItem("name"))
 
 // Constant DOM references
 const MENU_NAME = document.querySelector("#menu-name");
+const L_MENU_OPTIONS = document.querySelectorAll("#menu-options>li>a")
+
 const MENU_START_LINK = document.querySelector("#menu-start");
 const MENU_NAME_LINK = document.querySelector("#menu-edit-name");
 const MENU_INSTRUCTIONS_LINK = document.querySelector("#menu-instructions");
@@ -93,12 +103,46 @@ function startGame() {
   switchScene(GAME_SCENE);
 }
 
+function navigateMenu(e) {
+  // Only execute if the menu scene is active
+  if (MENU_SCENE.classList.contains("hidden"))
+    return;
+
+  // Check if we're navigating forwards or backwards
+  let dir;
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+    dir = 1;
+  } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+    dir = -1;
+  } else {
+    return;
+  }
+
+  let currentIndex = Array.from(L_MENU_OPTIONS).findIndex((el) => document.activeElement === el);
+
+  if (currentIndex == -1) {
+    // Not in the options currently, so go to the first
+    L_MENU_OPTIONS[0].focus();
+    return;
+  }
+
+  let newIndex = currentIndex + dir;
+  if (newIndex < 0)
+    newIndex = L_MENU_OPTIONS.length - 1;
+  else if (newIndex >= L_MENU_OPTIONS.length)
+    newIndex = 0;
+
+  L_MENU_OPTIONS[newIndex].focus();
+}
+
 // Setup
 // -----
 
+window.addEventListener("keydown", navigateMenu);
 MENU_START_LINK.addEventListener("click", startGame);
 MENU_NAME_LINK.addEventListener("click", () => switchScene(NAME_SCENE));
 MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_SCENE));
+
 
 
 // Instructions scene
@@ -123,4 +167,5 @@ INSTRUCTIONS_BACK_LINK.addEventListener("click", () => switchScene(lastScene));
 // ===========
 window.onload = function () {
   lastScene = MENU_SCENE;
+  NAME_INPUT.focus();
 }

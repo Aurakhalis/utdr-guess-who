@@ -69,9 +69,15 @@ a {
   color          : inherit;
 }
 
+a:focus,
+a:focus-visible {
+  color  : yellow;
+  outline: none;
+}
+
 a:hover {
-  cursor: url('img/sCursorHand.png'), auto;
-  color : yellow
+  cursor         : url('img/sCursorHand.png'), auto;
+  text-decoration: underline;
 }
 
 input,
@@ -127,7 +133,7 @@ ol>li {
   margin-bottom: 0.5rem;
 }
 
-ul>li a:hover::before {
+ul>li a:focus::before {
   content     : url("img/sHeart_0.png");
   margin-left : -0.75rem;
   margin-right: 0.125rem;
