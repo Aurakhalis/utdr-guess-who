@@ -12,7 +12,7 @@ const GAME_SCENE = document.querySelector("#game-scene");
 const INSTRUCTIONS_SCENE = document.querySelector("#instructions-scene");
 
 // Globals
-let name = "";
+let lastScene;
 
 // Functions
 // ---------
@@ -22,7 +22,12 @@ let name = "";
  * @param {Element} newScene 
  */
 function switchScene(newScene = MENU_SCENE) {
-  L_SCENES.forEach((el) => el.classList.add("hidden"));
+  L_SCENES.forEach((el) => {
+    // Mark the current scene as the last scene
+    if (!el.classList.contains("hidden"))
+      lastScene = el;
+    el.classList.add("hidden");
+  });
   newScene.classList.remove("hidden");
 }
 
@@ -39,6 +44,14 @@ const NAME_SUBMIT = document.querySelector("#name-submit");
 // Functions
 // ---------
 
+function setName(name) {
+  sessionStorage["name"] = name;
+}
+
+function getName() {
+  return sessionStorage["name"];
+}
+
 /**
  * Called when the user submits their name either through the button or enter/return
  * @param {Event} e 
@@ -47,11 +60,20 @@ function submitName(e) {
   // If this is a keydown event, check if the key is Enter or Return before triggering
   if (e.type === "keydown" && !(e.key === "Enter" || e.key === "Return"))
     return;
-  name = NAME_INPUT.getAttribute("value");
-  switchScene(MENU_SCENE);
+  setName(NAME_INPUT.value);
+  switchScene(lastScene);
 }
 
 // Setup
 // -----
+
 NAME_INPUT.addEventListener("keydown", submitName);
 NAME_SUBMIT.addEventListener("click", submitName);
+if (sessionStorage.getItem("name"))
+  NAME_INPUT.value = getName();
+
+// Final setup
+// ===========
+window.onload = function () {
+  lastScene = MENU_SCENE;
+}
