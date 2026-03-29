@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: 'm6x11medium';
-  src        : url('../fonts/m6x11-webfont.woff2') format('woff2'), url('../fonts/m6x11-webfont.woff') format('woff');
+  src        : url('fonts/m6x11-webfont.woff2') format('woff2'), url('fonts/m6x11-webfont.woff') format('woff');
   font-weight: normal;
   font-style : normal;
 }
@@ -11,7 +11,7 @@
 
 * {
   box-sizing: border-box;
-  cursor    : url('../img/sCursor.png'), auto;
+  cursor    : url('img/sCursor.png'), auto;
 }
 
 :root {
@@ -80,13 +80,13 @@ button {
 }
 
 button:hover {
-  cursor      : url('../img/sCursorHand.png'), auto;
+  cursor      : url('img/sCursorHand.png'), auto;
   border-color: yellow;
   color       : yellow
 }
 
 button:active {
-  cursor      : url('../img/sCursorHand.png'), auto;
+  cursor      : url('img/sCursorHand.png'), auto;
   border-color: white;
   color       : white
 }
