@@ -73,6 +73,7 @@ NAME_SUBMIT.addEventListener("click", submitName);
 if (sessionStorage.getItem("name"))
   NAME_INPUT.value = getName();
 
+
 // Menu scene
 // ==========
 
@@ -95,9 +96,27 @@ function startGame() {
 // Setup
 // -----
 
-MENU_START_LINK.addEventListener("click", () => switchScene(NAME_SCENE));
-MENU_NAME_LINK.addEventListener("click", startGame);
+MENU_START_LINK.addEventListener("click", startGame);
+MENU_NAME_LINK.addEventListener("click", () => switchScene(NAME_SCENE));
 MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_SCENE));
+
+
+// Instructions scene
+// ==================
+
+// Constants and globals
+// ---------------------
+
+// Constant DOM references
+const INSTRUCTIONS_BACK_LINK = document.querySelector("#instructions-back");
+
+// Functions
+// ---------
+
+// Setup
+// -----
+
+INSTRUCTIONS_BACK_LINK.addEventListener("click", () => switchScene(lastScene));
 
 
 // Final setup
