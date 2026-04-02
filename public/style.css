@@ -14,10 +14,13 @@
   cursor    : url('img/sCursor.png'), auto;
 }
 
-:root {
-  color      : white;
-  font-family: "m6x11medium", "Courier New", monospace;
-  font-size  : 32px;
+:root,
+select,
+option {
+  color           : white;
+  background-color: #FFFFFF00;
+  font-family     : "m6x11medium", "Courier New", monospace;
+  font-size       : 32px;
 }
 
 body {
@@ -241,6 +244,32 @@ ul>li a:focus::before {
   width        : 292px;
   margin-bottom: 0.5rem;
 }
+
+#menu-options {
+  width          : 100%;
+  display        : flex;
+  flex-direction : row-reverse;
+  justify-content: space-between;
+  align-items    : top;
+}
+
+#menu-options-config {
+  text-align: right;
+}
+
+@media (max-width: 800px) {
+  #menu-options {
+    flex-direction : column;
+    justify-content: flex-start;
+    align-items    : flex-start;
+  }
+
+  #menu-options-config {
+    text-align: left;
+  }
+}
+
+/* Instructions scene */
 
 #instructions-scene {
   padding: 1rem 0;
