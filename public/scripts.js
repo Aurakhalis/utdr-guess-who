@@ -6,10 +6,10 @@
 
 // Constant DOM references
 const L_SCENES = document.querySelectorAll(".scene");
-const NAME_SCENE = document.querySelector("#name-scene");
-const MENU_SCENE = document.querySelector("#menu-scene");
-const GAME_SCENE = document.querySelector("#game-scene");
-const INSTRUCTIONS_SCENE = document.querySelector("#instructions-scene");
+const NAME_SCENE = document.getElementById("name-scene");
+const MENU_SCENE = document.getElementById("menu-scene");
+const GAME_SCENE = document.getElementById("game-scene");
+const INSTRUCTIONS_SCENE = document.getElementById("instructions-scene");
 
 // Globals
 let lastScene;
@@ -59,7 +59,7 @@ async function loadJSON(url) {
 }
 
 /**
- * 
+ * Cycles through the selected option of a "select" element
  * @param {Element} selectEl 
  */
 function cycleSelect(selectEl) {
@@ -96,8 +96,8 @@ function cycleSelect(selectEl) {
 // ---------------------
 
 // Constant DOM references
-const NAME_INPUT = document.querySelector("#name-input");
-const NAME_SUBMIT = document.querySelector("#name-submit");
+const NAME_INPUT = document.getElementById("name-input");
+const NAME_SUBMIT = document.getElementById("name-submit");
 
 // Functions
 // ---------
@@ -140,11 +140,11 @@ if (sessionStorage.getItem("name"))
 // ---------------------
 
 // Constant DOM references
-const MENU_NAME = document.querySelector("#menu-name");
+const MENU_NAME = document.getElementById("menu-name");
 
-const MENU_START_LINK = document.querySelector("#menu-start");
-const MENU_NAME_LINK = document.querySelector("#menu-edit-name");
-const MENU_INSTRUCTIONS_LINK = document.querySelector("#menu-instructions");
+const MENU_START_LINK = document.getElementById("menu-start");
+const MENU_NAME_LINK = document.getElementById("menu-edit-name");
+const MENU_INSTRUCTIONS_LINK = document.getElementById("menu-instructions");
 const L_MENU_MAIN_OPTIONS = [MENU_START_LINK, MENU_NAME_LINK, MENU_INSTRUCTIONS_LINK];
 
 const MENU_CHARSET_LABEL = document.getElementById("charset-label");
@@ -236,8 +236,8 @@ MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_
 // ---------------------
 
 // Constant DOM references
-const INSTRUCTIONS_SCENE_HEADER = document.querySelector("#instructions-scene");
-const INSTRUCTIONS_BACK_BUTTON = document.querySelector("#instructions-back");
+const INSTRUCTIONS_SCENE_HEADER = document.getElementById("instructions-scene");
+const INSTRUCTIONS_BACK_BUTTON = document.getElementById("instructions-back");
 
 // Functions
 // ---------
