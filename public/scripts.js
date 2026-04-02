@@ -58,6 +58,36 @@ async function loadJSON(url) {
   return fetch(url).then(blob => blob.json());
 }
 
+/**
+ * 
+ * @param {Element} selectEl 
+ */
+function cycleSelect(selectEl) {
+  // Check this is indeed a select element
+  if (selectEl.tagName !== "SELECT") {
+    console.error("cycleSelect called on element not of 'select' type: " + selectEl);
+    return;
+  }
+
+  // Find the selected option, then select the next one
+  const lOptions = selectEl.querySelectorAll("option");
+  let iSelected = -1;
+  lOptions.forEach((optionEl, i) => {
+    if (optionEl.hasAttribute("selected")) {
+      optionEl.removeAttribute("selected");
+      iSelected = i;
+    }
+  });
+
+  // Select the next option. If by chance no option was selected, going from -1 to 0 here will select the first
+  iSelected += 1
+  if (iSelected >= lOptions.length) {
+    iSelected = 0;
+  }
+  lOptions[iSelected].setAttribute("selected", "selected");
+
+}
+
 
 // Name scene
 // ==========
@@ -111,11 +141,17 @@ if (sessionStorage.getItem("name"))
 
 // Constant DOM references
 const MENU_NAME = document.querySelector("#menu-name");
-const L_MENU_OPTIONS = document.querySelectorAll("#menu-options>li>a")
 
 const MENU_START_LINK = document.querySelector("#menu-start");
 const MENU_NAME_LINK = document.querySelector("#menu-edit-name");
 const MENU_INSTRUCTIONS_LINK = document.querySelector("#menu-instructions");
+const L_MENU_MAIN_OPTIONS = [MENU_START_LINK, MENU_NAME_LINK, MENU_INSTRUCTIONS_LINK];
+
+const MENU_CHARSET_LABEL = document.getElementById("charset-label");
+const MENU_CHARSET_SELECT = document.getElementById("charset-select");
+const L_MENU_CONFIG_OPTIONS = [MENU_CHARSET_LABEL];
+
+const L_MENU_OPTIONS = [...L_MENU_MAIN_OPTIONS, ...L_MENU_CONFIG_OPTIONS];
 
 const CHARSET_SELECT = document.getElementById("charset-select");
 const CHARSET_OPTION_TEMPLATE = document.getElementById("charset-option-template");
@@ -132,7 +168,7 @@ function navigateMenu(e) {
   if (MENU_SCENE.classList.contains("hidden"))
     return;
 
-  let currentIndex = Array.from(L_MENU_OPTIONS).findIndex((el) => document.activeElement === el);
+  let currentIndex = L_MENU_OPTIONS.findIndex((el) => document.activeElement === el);
 
   // Check if we're navigating forwards or backwards
   let dir;
@@ -141,8 +177,13 @@ function navigateMenu(e) {
   } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
     dir = -1;
   } else if (e.key === " " || e.key === "z" && currentIndex !== -1) {
+    const el = document.activeElement;
     e.stopPropagation();
-    document.activeElement.click();
+    if (el === MENU_CHARSET_LABEL) {
+      cycleSelect(MENU_CHARSET_SELECT);
+    } else {
+      el.click();
+    }
     return;
   } else {
     return;
