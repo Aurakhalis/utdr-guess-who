@@ -11,9 +11,17 @@
   <script type="module" src="./scripts.js"></script>
 </head>
 
+<!-- Templates for DOM elements that will be dynamically loaded -->
+<template id="charset-option-template">
+  <option class="charset-option" value=""></option>
+</template>
+
+<!-- Main page content -->
+
 <body>
   <div class="max-width-box">
 
+    <!-- Name entry scene -->
     <div id="name-scene" class="scene">
       <div class="empty-item"></div>
       <label for="name-input" id="name-input-label">
@@ -24,6 +32,7 @@
       <button type="button" id="name-submit">Continue</button>
     </div>
 
+    <!-- Main menu scene -->
     <div id="menu-scene" class="scene hidden">
       <div id="menu-title-and-name">
         <img src="img/sNewLogo.png" alt="UTDR Logo" id="menu-logo">
@@ -32,17 +41,29 @@
           <span id="menu-name"></span>
         </p>
       </div>
-      <ul id="menu-options">
-        <li><a href="javascript:void(0)" id="menu-start">START GAME</a></li>
-        <li><a href="javascript:void(0)" id="menu-edit-name">EDIT NAME</a></li>
-        <li><a href="javascript:void(0)" id="menu-instructions">INSTRUCTIONS</a></li>
-      </ul>
+      <div id="menu-options">
+        <ul id="menu-options-config">
+          <li>
+            <label for="">CHARACTER SET: </label>
+            <select name="charset" id="charset-select">
+              <!-- Filled dynamically based on detected sets -->
+            </select>
+          </li>
+        </ul>
+        <ul id="menu-options-main">
+          <li><a href="javascript:void(0)" id="menu-start">START GAME</a></li>
+          <li><a href="javascript:void(0)" id="menu-edit-name">EDIT NAME</a></li>
+          <li><a href="javascript:void(0)" id="menu-instructions">INSTRUCTIONS</a></li>
+        </ul>
+      </div>
     </div>
 
+    <!-- Gameplay scene -->
     <div id="game-scene" class="scene hidden">
       <p>Under construction!</p>
     </div>
 
+    <!-- Instructions scene -->
     <div id="instructions-scene" class="scene hidden">
       <div class="center-container">
         <h3>INSTRUCTIONS</h3>

@@ -15,6 +15,7 @@ const INSTRUCTIONS_SCENE = document.querySelector("#instructions-scene");
 let lastScene;
 let lCharacterSets = null;
 
+
 // Functions
 // ---------
 
@@ -56,6 +57,7 @@ function switchScene(newScene = MENU_SCENE) {
 async function loadJSON(url) {
   return fetch(url).then(blob => blob.json());
 }
+
 
 // Name scene
 // ==========
@@ -115,6 +117,9 @@ const MENU_START_LINK = document.querySelector("#menu-start");
 const MENU_NAME_LINK = document.querySelector("#menu-edit-name");
 const MENU_INSTRUCTIONS_LINK = document.querySelector("#menu-instructions");
 
+const CHARSET_SELECT = document.getElementById("charset-select");
+const CHARSET_OPTION_TEMPLATE = document.getElementById("charset-option-template");
+
 // Functions
 // ---------
 
@@ -159,11 +164,19 @@ function navigateMenu(e) {
 }
 
 async function loadCharacterSets() {
+  // Fetch the sets from the meta file
   const charsetUrl = "character-sets/charset-meta.json";
   const charsetMeta = await loadJSON(charsetUrl)
     .catch((err) => alert("ERROR: Could not load character set information from " + charsetUrl + ".\n" +
       "Try refreshing the page in case this is a temporary issue. The error message received was: \n" + err));
   lCharacterSets = charsetMeta.sets;
+
+  // Fill the options for the character set select box
+  lCharacterSets.forEach((setName) => {
+    const newCharsetOption = document.importNode(CHARSET_OPTION_TEMPLATE.content, true).querySelector(".charset-option");
+    newCharsetOption.value = newCharsetOption.textContent = setName;
+    CHARSET_SELECT.appendChild(newCharsetOption);
+  });
 }
 
 // Setup
@@ -173,7 +186,6 @@ window.addEventListener("keydown", navigateMenu);
 MENU_START_LINK.addEventListener("click", startGame);
 MENU_NAME_LINK.addEventListener("click", () => switchScene(NAME_SCENE));
 MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_SCENE));
-
 
 
 // Instructions scene
