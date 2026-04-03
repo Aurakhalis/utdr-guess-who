@@ -163,6 +163,18 @@ select {
   margin-top: -2px;
 }
 
+@media (max-width: 800px) {
+  .big-screen-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 801px) {
+  .small-screen-only {
+    display: none !important;
+  }
+}
+
 /* Styling modifiers */
 
 .hidden {
@@ -282,6 +294,95 @@ select {
   #menu-options-config {
     text-align: left;
   }
+}
+
+/* Game scene */
+
+#game-scene {
+  display        : flex;
+  justify-content: space-between;
+  align-items    : flex-start;
+}
+
+@media (max-width: 800px) {
+  #game-scene {
+    flex-direction : column;
+    justify-content: flex-start;
+    align-items    : center;
+  }
+}
+
+#game-info-panel {
+  display        : flex;
+  flex-direction : column;
+  justify-content: space-between;
+  align-items    : center;
+}
+
+#guesses-line {
+  display        : flex;
+  justify-content: center;
+  gap            : 0.5rem;
+  flex-wrap      : wrap;
+}
+
+#game-cards-panel {
+  display        : flex;
+  flex-direction : column;
+  justify-content: space-between;
+  align-items    : stretch;
+}
+
+#cards-top-line {
+  display        : flex;
+  justify-content: space-between;
+  align-items    : center;
+}
+
+:root {
+  --card-img-width   : 40px;
+  --card-border-width: 2px;
+  --card-column-gap  : 8px;
+  --card-column-width: calc(var(--card-img-width) + 2 * var(--card-border-width) + var(--card-column-gap));
+
+  --card-img-height: 64px;
+  --card-row-gap   : 4px;
+  --card-row-height: calc(var(--card-img-height) + 2 * var(--card-border-width) + var(--card-row-gap));
+}
+
+#card-grid {
+  display              : grid;
+  grid-template-columns: repeat(auto-fill, var(--card-column-width));
+  gap                  : 0;
+}
+
+.character-card {
+  width : var(--card-column-width);
+  height: var(--card-row-height);
+}
+
+.character-img-frame {
+  border-width: var(--card-border-width);
+  border-style: solid;
+}
+
+.character-img-frame.active {
+  border-color: white;
+}
+
+.character-img-frame.inactive {
+  border-color: #404040;
+}
+
+.character-img {
+  width : var(--card-img-width);
+  height: var(--card-img-height);
+}
+
+#card-panel-buttons {
+  display        : flex;
+  justify-content: flex-end;
+  gap            : 1rem;
 }
 
 /* Instructions scene */
