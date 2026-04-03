@@ -217,6 +217,10 @@ select {
   margin-bottom: 0 !important;
 }
 
+.med-top-margin {
+  margin-top: 1rem !important;
+}
+
 .center-container {
   display        : flex;
   flex-direction : column;
@@ -316,7 +320,7 @@ select {
 
 :root {
   --heart-scale: 3;
-  --heart-width: calc(var(var(--heart-scale) * 20px));
+  --heart-width: calc(var(--heart-scale) * 20px);
 
   --card-scale: 2;
 
@@ -336,7 +340,7 @@ select {
   padding        : 0.5rem 0;
   width          : 100%;
   display        : flex;
-  justify-content: stretch;
+  justify-content: space-around;
   align-items    : stretch;
   column-gap     : 1rem;
 }
@@ -383,10 +387,11 @@ select {
 }
 
 .guess-icon img {
-  width: 60px;
+  width: var(--heart-width);
 }
 
 #game-cards-panel {
+  max-width      : 1040px;
   flex           : 1 0 auto;
   display        : flex;
   flex-direction : column;
