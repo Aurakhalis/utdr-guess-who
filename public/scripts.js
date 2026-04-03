@@ -322,12 +322,12 @@ MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_
 // ---------------------
 
 // Constant DOM references
-CHARACTER_CARD_TEMPLATE = document.getElementById("character-card-template");
+const CHARACTER_CARD_TEMPLATE = document.getElementById("character-card-template");
 
-YOUR_CHAR_NAME = document.getElementById("your-char-name");
-YOUR_CHAR_IMG = document.getElementById("your-char-img");
+const YOUR_CHAR_NAME = document.getElementById("your-char-name");
+const YOUR_CHAR_IMG = document.getElementById("your-char-img");
 
-CARD_GRID = document.getElementById("card-grid");
+const CARD_GRID = document.getElementById("card-grid");
 
 // Functions
 // ---------

@@ -335,13 +335,13 @@ select {
   align-items    : center;
 }
 
-.your-char-img-frame {
+#your-char-img-frame {
   border: calc(2 * var(--card-border-width)) solid white;
   width : calc(2 * var(--card-img-width) + 4 * var(--card-border-width));
   height: calc(2 * var(--card-img-height) + 4 * var(--card-border-width));
 }
 
-.your-char-img {
+#your-char-img {
   width : calc(2 * var(--card-img-width));
   height: calc(2 * var(--card-img-height));
 }
