@@ -325,6 +325,7 @@ MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_
 const CHARACTER_CARD_TEMPLATE = document.getElementById("character-card-template");
 
 const QUIT_GAME_BUTTON = document.getElementById("game-quit");
+const RESTART_GAME_BUTTON = document.getElementById("game-restart");
 const L_NOTES_BUTTONS = document.querySelectorAll(".game-notes");
 const L_INSTRUCTIONS_BUTTONS = document.querySelectorAll(".game-instructions");
 
@@ -420,6 +421,7 @@ async function loadCharacterSet(setName) {
 // -----
 
 QUIT_GAME_BUTTON.addEventListener("click", () => switchScene(MENU_SCENE));
+RESTART_GAME_BUTTON.addEventListener("click", startGame);
 L_NOTES_BUTTONS.forEach((el) => el.addEventListener("click", () => { return; }))
 L_INSTRUCTIONS_BUTTONS.forEach((el) => el.addEventListener("click", () => switchScene(INSTRUCTIONS_SCENE)))
 
