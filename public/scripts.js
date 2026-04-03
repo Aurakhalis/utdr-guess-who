@@ -324,6 +324,10 @@ MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_
 // Constant DOM references
 const CHARACTER_CARD_TEMPLATE = document.getElementById("character-card-template");
 
+const QUIT_GAME_BUTTON = document.getElementById("game-quit");
+const L_NOTES_BUTTONS = document.querySelectorAll(".game-notes");
+const L_INSTRUCTIONS_BUTTONS = document.querySelectorAll(".game-instructions");
+
 const YOUR_CHAR_NAME = document.getElementById("your-char-name");
 const YOUR_CHAR_IMG = document.getElementById("your-char-img");
 
@@ -405,7 +409,7 @@ async function loadCharacterSet(setName) {
     const imgEl = newCard.querySelector(".character-img");
     imgEl.setAttribute("src", charsetPath + "/" + charInfo.imageName);
     imgEl.setAttribute("alt", charInfo.name);
-    CARD_GRID.appendChild(imgEl);
+    CARD_GRID.appendChild(newCard);
   });
 
   // Mark this set as loaded
@@ -414,6 +418,10 @@ async function loadCharacterSet(setName) {
 
 // Setup
 // -----
+
+QUIT_GAME_BUTTON.addEventListener("click", () => switchScene(MENU_SCENE));
+L_NOTES_BUTTONS.forEach((el) => el.addEventListener("click", () => { return; }))
+L_INSTRUCTIONS_BUTTONS.forEach((el) => el.addEventListener("click", () => switchScene(INSTRUCTIONS_SCENE)))
 
 
 // Instructions scene

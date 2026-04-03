@@ -71,25 +71,25 @@
 
       <div id="game-info-panel">
 
-        <button id="game-quit">Quit to menu</button>
+        <button id="game-quit" class="small no-margin">Quit to menu</button>
 
         <p class="small-screen-only"><span class="player-name"></span>'s POV</p>
 
         <div id="small-screen-buttons" class="small-screen-only">
-          <button class="game-notes">Notes</button>
-          <button class="game-instructions">Instructions</button>
+          <button class="game-notes small no-margin">Notes</button>
+          <button class="game-instructions small no-margin">Instructions</button>
         </div>
 
         <div id="your-char-display" class="center-container">
 
           <p class="center-text">YOUR CHARACTER:</p>
           <p id="your-char-name"></p>
-          <div class="your-char-img-frame">
+          <div id="your-char-img-frame">
             <img id="your-char-img">
           </div>
 
           <div id="guesses-display" class="center-container">
-            <p class="small-text">Guesses:</p>
+            <p class="small-text no-bottom-margin">Guesses:</p>
             <div id="guesses-line">
               <div class="guess-icon">
                 <img src="img/sHeart_0.png" alt="Guess available" class="active-icon">
@@ -97,24 +97,26 @@
               </div>
               <div class="guess-icon">
                 <img src="img/sHeart_0.png" alt="Guess available" class="active-icon">
-                <img src="img/sHeart_1.png" alt="Guess unavailable" class="inactive-iconhidden">
+                <img src="img/sHeart_1.png" alt="Guess unavailable" class="inactive-icon hidden">
               </div>
               <div class="guess-icon">
                 <img src="img/sHeart_0.png" alt="Guess available" class="active-icon">
-                <img src="img/sHeart_1.png" alt="Guess unavailable" class="inactive-iconhidden">
+                <img src="img/sHeart_1.png" alt="Guess unavailable" class="inactive-icon hidden">
               </div>
             </div>
           </div>
 
         </div>
 
+        <div class="empty-item"></div>
+
       </div>
 
       <div id="game-cards-panel">
 
         <div id="cards-top-line" class="big-screen-only">
-          <p class="small-screen-only"><span class="player-name"></span>'s POV</p>
-          <button class="game-notes">Notes</button>
+          <p class="big-screen-only"><span class="player-name"></span>'s POV</p>
+          <button class="game-notes small no-margin">Notes</button>
         </div>
 
         <p class="cards-left-display">Cards left: <span class="cards-left-count"></span></p>
@@ -122,7 +124,7 @@
         <div id="card-grid"></div>
 
         <div id="card-panel-buttons" class="big-screen-only">
-          <button class="game-instructions">Instructions</button>
+          <button class="game-instructions small no-margin">Instructions</button>
         </div>
 
       </div>

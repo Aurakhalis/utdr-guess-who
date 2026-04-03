@@ -116,6 +116,13 @@ button {
   font-size       : 1.5rem;
 }
 
+button.small {
+  margin      : 0.5rem;
+  padding     : 0.25rem 0.5rem;
+  font-size   : 0.75rem;
+  border-width: 0.125rem;
+}
+
 button:hover {
   cursor         : url('img/sCursorHand.png'), auto;
   text-decoration: underline;
@@ -202,6 +209,10 @@ select {
   color: red !important;
 }
 
+.no-margin {
+  margin: 0 !important;
+}
+
 .no-bottom-margin {
   margin-bottom: 0 !important;
 }
@@ -220,7 +231,7 @@ select {
   margin : 0;
   flex   : auto;
   height : 100%;
-  width  : min(1440px, 95vw);
+  width  : min(1600px, 95vw);
 
   display        : flex;
   flex-direction : column;
@@ -304,20 +315,30 @@ select {
 /* Game scene */
 
 :root {
-  --card-img-width   : 40px;
-  --card-border-width: 2px;
-  --card-column-gap  : 8px;
-  --card-column-width: calc(var(--card-img-width) + 2 * var(--card-border-width) + var(--card-column-gap));
+  --heart-scale: 3;
+  --heart-width: calc(var(var(--heart-scale) * 20px));
 
-  --card-img-height: 64px;
-  --card-row-gap   : 4px;
-  --card-row-height: calc(var(--card-img-height) + 2 * var(--card-border-width) + var(--card-row-gap));
+  --card-scale: 2;
+
+  --card-img-width   : calc(var(--card-scale) * 40px);
+  --card-border-width: calc(var(--card-scale) * 2px);
+  --card-column-gap  : calc(var(--card-scale) * 8px);
+  --card-frame-width : calc(var(--card-img-width) + 2 * var(--card-border-width));
+  --card-column-width: calc(var(--card-frame-width) + var(--card-column-gap));
+
+  --card-img-height  : calc(var(--card-scale) * 64px);
+  --card-row-gap     : calc(var(--card-scale) * 4px);
+  --card-frame-height: calc(var(--card-img-height) + 2 * var(--card-border-width));
+  --card-row-height  : calc(var(--card-frame-height) + var(--card-row-gap));
 }
 
 #game-scene {
+  padding        : 0.5rem 0;
+  width          : 100%;
   display        : flex;
-  justify-content: space-between;
-  align-items    : flex-start;
+  justify-content: stretch;
+  align-items    : stretch;
+  column-gap     : 1rem;
 }
 
 @media (max-width: 800px) {
@@ -346,18 +367,38 @@ select {
   height: calc(2 * var(--card-img-height));
 }
 
+#guesses-display {
+  align-self: stretch;
+}
+
 #guesses-line {
+  align-self     : stretch;
   display        : flex;
-  justify-content: center;
-  gap            : 0.5rem;
+  justify-content: space-around;
   flex-wrap      : wrap;
 }
 
+.guess-icon {
+  display: inline-block;
+}
+
+.guess-icon img {
+  width: 60px;
+}
+
 #game-cards-panel {
+  flex           : 1 0 auto;
   display        : flex;
   flex-direction : column;
   justify-content: space-between;
   align-items    : stretch;
+}
+
+@media (max-width: 800px) {
+  #game-cards-panel {
+    padding   : 0 1rem;
+    align-self: stretch;
+  }
 }
 
 #cards-top-line {
@@ -378,6 +419,8 @@ select {
 }
 
 .character-img-frame {
+  width       : var(--card-frame-width);
+  height      : var(--card-frame-height);
   border-width: var(--card-border-width);
   border-style: solid;
 }
