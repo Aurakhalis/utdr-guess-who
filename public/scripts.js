@@ -482,7 +482,6 @@ L_INSTRUCTIONS_BUTTONS.forEach((el) => el.addEventListener("click", () => switch
 L_GUESS_ICONS.forEach((el) => el.addEventListener("click", flipGuess));
 // Character cards are added dynamically, so the click event to flip them has to be added when they're added
 
-
 // Instructions scene
 // ==================
 
