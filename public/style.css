@@ -14,7 +14,8 @@
 }
 
 :root {
-  cursor: url('img/sCursor.png'), auto;
+  cursor         : url('img/sCursor.png'), auto;
+  image-rendering: pixelated;
 }
 
 :root,
