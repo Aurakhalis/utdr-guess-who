@@ -209,8 +209,11 @@ async function startGame() {
 
   // Set the image to be scaled based on its natural size
   const cardScale = window.getComputedStyle(YOUR_CHAR_IMG).getPropertyValue('--card-scale');
-  const yourCharImgWidth = 2 * YOUR_CHAR_IMG.naturalWidth * cardScale;
-  YOUR_CHAR_IMG.setAttribute("style", `width: ${yourCharImgWidth}px;`);
+  YOUR_CHAR_IMG.onload = () => {
+    // Set the image to be scaled based on its natural size
+    const yourCharImgWidth = 2 * YOUR_CHAR_IMG.naturalWidth * cardScale;
+    YOUR_CHAR_IMG.setAttribute("style", `width: ${yourCharImgWidth}px;`);
+  }
 
   // Reset available guesses
   document.querySelectorAll(".guess-icon").forEach((el) => {
@@ -422,10 +425,13 @@ async function loadCharacterSet(setName) {
     imgEl.setAttribute("src", charsetPath + "/" + charInfo.imageName);
     imgEl.setAttribute("alt", charInfo.name);
 
-    // Set the image to be scaled based on its natural size
     const cardScale = window.getComputedStyle(CARD_GRID).getPropertyValue('--card-scale');
-    const imgWidth = imgEl.naturalWidth * cardScale;
-    imgEl.setAttribute("style", `width: ${imgWidth}px;`);
+
+    imgEl.onload = () => {
+      // Set the image to be scaled based on its natural size
+      const imgWidth = imgEl.naturalWidth * cardScale;
+      imgEl.setAttribute("style", `width: ${imgWidth}px;`);
+    }
 
     const frameEl = newCard.querySelector(".character-img-frame");
     frameEl.addEventListener("click", flipCard);
