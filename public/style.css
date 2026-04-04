@@ -362,6 +362,14 @@ select {
   align-items    : center;
 }
 
+#small-screen-name-display {
+  padding-top: 1rem;
+}
+
+#small-screen-buttons {
+  padding-bottom: 1rem;
+}
+
 #your-char-img-frame {
   border: calc(2 * var(--card-border-width)) solid white;
   width : calc(2 * var(--card-img-width) + 4 * var(--card-border-width));
