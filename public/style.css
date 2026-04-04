@@ -440,11 +440,28 @@ select {
 }
 
 .character-card {
+  position       : relative;
   width          : var(--card-column-width);
   height         : var(--card-row-height);
   display        : flex;
   justify-content: center;
   align-items    : center;
+}
+
+.character-name-popup {
+  position: absolute;
+  bottom  : var(--card-row-height);
+  z-index : 2;
+
+  border-width    : var(--card-border-width);
+  border-style    : solid;
+  background-color: black;
+  font-size       : 0.75rem;
+  padding         : 0rem 0.5rem;
+}
+
+.character-name-popup:not(:has(+.character-img-frame:hover)) {
+  display: none;
 }
 
 .character-img-frame {
@@ -460,12 +477,17 @@ select {
   cursor: url('img/sCursorHand.png'), pointer;
 }
 
-.active .character-img-frame {
+.active .character-img-frame,
+.active .character-name-popup {
   border-color: white;
 }
 
 .inactive .character-img-frame {
   filter: brightness(0.1) saturate(0);
+}
+
+.inactive .character-name-popup {
+  filter: brightness(0.3);
 }
 
 #card-panel-buttons {

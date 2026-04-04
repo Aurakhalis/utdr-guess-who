@@ -414,6 +414,8 @@ async function loadCharacterSet(setName) {
   lCharInfo.forEach((charInfo) => {
     const newCard = document.importNode(CHARACTER_CARD_TEMPLATE.content, true).querySelector(".character-card");
 
+    newCard.querySelector(".character-name").textContent = charInfo.name;
+
     const imgEl = newCard.querySelector(".character-img");
     imgEl.setAttribute("src", charsetPath + "/" + charInfo.imageName);
     imgEl.setAttribute("alt", charInfo.name);
