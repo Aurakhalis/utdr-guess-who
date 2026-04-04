@@ -450,15 +450,31 @@ select {
 }
 
 .character-name-popup {
-  position: absolute;
-  bottom  : var(--card-row-height);
-  z-index : 2;
+  position : absolute;
+  bottom   : var(--card-row-height);
+  animation: 0.125s linear 1 popup;
+  z-index  : 2;
+  padding  : 0rem 0.5rem;
+  min-width: max-content;
+  max-width: 5rem;
 
   border-width    : var(--card-border-width);
   border-style    : solid;
   background-color: black;
   font-size       : 0.75rem;
-  padding         : 0rem 0.5rem;
+  text-align      : center;
+}
+
+@keyframes popup {
+  from {
+    scale : 0%;
+    bottom: calc(-1rem + var(--card-row-height));
+  }
+
+  to {
+    scale : 100%;
+    bottom: var(--card-row-height);
+  }
 }
 
 .character-name-popup:not(:has(+.character-img-frame:hover)) {
