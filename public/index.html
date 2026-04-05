@@ -73,8 +73,24 @@
     <!-- Gameplay scene -->
     <div id="game-scene" class="scene hidden">
 
-      <div id="game-info-panel">
+      <dialog id="game-notes-dialog" closedby="any">
+        <textarea id="game-notes">My questions asked:
 
+* 
+  Yes/No
+* 
+  Yes/No
+* 
+  Yes/No
+* 
+  Yes/No
+* 
+  Yes/No
+        </textarea>
+        <button id="game-notes-close" class="no-bottom-margin">Hide</button>
+      </dialog>
+
+      <div id="game-info-panel">
 
         <div id="game-top-buttons">
           <button tabindex="1" id="game-quit" class="small no-margin">Quit to menu</button>

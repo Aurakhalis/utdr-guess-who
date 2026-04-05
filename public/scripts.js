@@ -352,6 +352,10 @@ MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_
 // Constant DOM references
 const CHARACTER_CARD_TEMPLATE = document.getElementById("character-card-template");
 
+const GAME_NOTES_DIALOG = document.getElementById("game-notes-dialog");
+const GAME_NOTES_INPUT = document.getElementById("game-notes");
+const GAME_NOTES_CLOSE = document.getElementById("game-notes-close");
+
 const QUIT_GAME_BUTTON = document.getElementById("game-quit");
 const RESTART_GAME_BUTTON = document.getElementById("game-restart");
 const L_NOTES_BUTTONS = document.querySelectorAll(".game-notes");
@@ -372,6 +376,21 @@ let lGameFocusableItems = null;
 
 // Functions
 // ---------
+
+/**
+ * Open the notes dialog
+ */
+function openNotes() {
+  GAME_NOTES_DIALOG.showModal();
+}
+
+/**
+ * Close the notes dialog
+ */
+function closeNotes() {
+  GAME_NOTES_DIALOG.close();
+}
+
 
 /**
  * Get the total number of possible characters
@@ -662,9 +681,13 @@ function navigateGame(e) {
 // -----
 
 window.addEventListener("keydown", navigateGame);
+
 QUIT_GAME_BUTTON.addEventListener("click", () => switchScene(MENU_SCENE));
 RESTART_GAME_BUTTON.addEventListener("click", startGame);
-L_NOTES_BUTTONS.forEach((el) => el.addEventListener("click", () => { return; }))
+
+L_NOTES_BUTTONS.forEach((el) => el.addEventListener("click", openNotes))
+GAME_NOTES_CLOSE.addEventListener("click", closeNotes);
+
 L_INSTRUCTIONS_BUTTONS.forEach((el) => el.addEventListener("click", () => switchScene(INSTRUCTIONS_SCENE)))
 
 L_GUESS_ICONS.forEach((el) => el.addEventListener("click", flipGuess));
