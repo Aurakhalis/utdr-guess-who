@@ -195,7 +195,7 @@ async function startGame() {
 
   // Store a list of all focusable character card frames
   lCharacterCardFrames = document.querySelectorAll(".character-card .character-img-frame");
-  lGameFocusableItems = [...L_GUESS_ICONS, ...lCharacterCardFrames];
+  arrangeGameFocusableItems();
 
   // Set all characters to active
   document.querySelectorAll(".character-card").forEach((el) => {
@@ -242,6 +242,10 @@ async function startGame() {
   }, 50);
 }
 
+/**
+ * Keyboard navigation for the menu scene
+ * @param {KeyboardEvent} e 
+ */
 function navigateMenu(e) {
   // Only execute if the menu scene is active
   if (MENU_SCENE.classList.contains("hidden"))
@@ -295,9 +299,9 @@ function navigateMenu(e) {
     // dir is -1 or 1, so we're moving up or down
     currentIndex += dir;
     if (currentIndex < 0)
-      currentIndex = L_MENU_OPTIONS.length - 1;
-    else if (currentIndex >= L_MENU_OPTIONS.length)
       currentIndex = 0;
+    else if (currentIndex >= L_MENU_OPTIONS.length)
+      currentIndex = L_MENU_OPTIONS.length - 1;
   }
 
   L_MENU_OPTIONS[currentIndex].focus({ focusVisible: true });
@@ -364,6 +368,8 @@ const CARD_GRID = document.getElementById("card-grid");
 // Globals
 let cardScaleInfo = null;
 let lCharacterCardFrames = null;
+let lGameButtonsBeforePlayArea = null;
+let lGameButtonsAfterPlayArea = null;
 let lGameFocusableItems = null;
 
 // Functions
@@ -542,6 +548,25 @@ function flipCard(e) {
   updateNumChars();
 }
 
+/**
+ * Sets up the list of all focusable items in the game scene, in the order they'll appear with the current window width
+ */
+function arrangeGameFocusableItems() {
+  if (window.innerWidth <= 800) {
+    lGameButtonsBeforePlayArea = [QUIT_GAME_BUTTON, RESTART_GAME_BUTTON, L_NOTES_BUTTONS[0], L_INSTRUCTIONS_BUTTONS[0]];
+    lGameButtonsAfterPlayArea = [];
+  } else {
+    lGameButtonsBeforePlayArea = [QUIT_GAME_BUTTON, RESTART_GAME_BUTTON, L_NOTES_BUTTONS[1]];
+    lGameButtonsAfterPlayArea = [L_INSTRUCTIONS_BUTTONS[1]];
+  }
+  lGameFocusableItems = [...lGameButtonsBeforePlayArea, ...L_GUESS_ICONS, ...lCharacterCardFrames,
+  ...lGameButtonsAfterPlayArea];
+}
+
+/**
+ * Keyboard navigation for the game scene
+ * @param {KeyboardEvent} e 
+ */
 function navigateGame(e) {
   // Only execute if the game scene is active
   if (GAME_SCENE.classList.contains("hidden"))
@@ -574,34 +599,61 @@ function navigateGame(e) {
     lCharacterCardFrames[0].focus({ focusVisible: true });
   }
 
+  const numButtonsBeforePlayArea = lGameButtonsBeforePlayArea.length;
+  const numGuessIcons = L_GUESS_ICONS.length;
+  const numCharacterCards = lCharacterCardFrames.length;
+  const numFocusable = lGameFocusableItems.length;
+
   if (Math.abs(dir) > 1) {
     // If dir is 2 or -2, we're moving down or up respectively
-    if (currentIndex < L_GUESS_ICONS.length) {
-      // We're currently on a guess icon, so go to either the beginning or end of the character cards
+    if (currentIndex < numButtonsBeforePlayArea) {
+      // We're currently on one of the buttons at the start, so go either to the first button or to the guess icons
       if (dir > 0) {
-        currentIndex = L_GUESS_ICONS.length;
+        currentIndex = numButtonsBeforePlayArea;
       } else {
-        currentIndex = lGameFocusableItems.length - 1;
+        currentIndex = 0;
       }
-    } else {
+    } else if (currentIndex < numButtonsBeforePlayArea + numGuessIcons) {
+      // We're currently on a guess icon, so go to either the beginning buttons or the character cards
+      if (dir > 0) {
+        currentIndex = numButtonsBeforePlayArea + numGuessIcons;
+      } else {
+        currentIndex = 0;
+      }
+    } else if (currentIndex < numButtonsBeforePlayArea + numGuessIcons + numCharacterCards) {
+      // We're in the card grid, so either move to the guess icons, a different line in the grid, or the after buttons
+
       // Count how many columns there currently are in the grid
       const numCols = window.getComputedStyle(CARD_GRID).getPropertyValue("grid-template-columns").split(" ").length;
 
       // Check if we're moving back from the first row or forward from the last row, in which case go to the guess icons
-      if ((currentIndex < L_GUESS_ICONS.length + numCols && dir < 0) ||
-        (currentIndex >= lGameFocusableItems.length - numCols && dir > 0)) {
-        currentIndex = 0;
+      if (currentIndex < numButtonsBeforePlayArea + numGuessIcons + numCols && dir < 0) {
+        currentIndex = numButtonsBeforePlayArea;
+      } else if (currentIndex >= numButtonsBeforePlayArea + numGuessIcons + numCharacterCards - numCols && dir > 0) {
+        currentIndex = numButtonsBeforePlayArea + numGuessIcons + numCharacterCards;
       } else {
         currentIndex += Math.sign(dir) * numCols;
+      }
+    } else {
+      // We're in the buttons after the play area, so either go back to the last row of the character grid, or the end
+      // of these buttons
+      if (dir > 0) {
+        currentIndex = numFocusable - 1;
+      } else {
+        // The grid might not be perfectly rectangular, so we can't simply count back from the end to get to the
+        // beginning of the last row. Instead we need to count from the beginning
+        const numCols = window.getComputedStyle(CARD_GRID).getPropertyValue("grid-template-columns").split(" ").length;
+        const numRows = window.getComputedStyle(CARD_GRID).getPropertyValue("grid-template-rows").split(" ").length;
+        currentIndex = numButtonsBeforePlayArea + numGuessIcons + numCols * (numRows - 1);
       }
     }
   } else {
     // dir is -1 or 1, so we're moving right or left
     currentIndex += dir;
     if (currentIndex < 0)
-      currentIndex = lGameFocusableItems.length - 1;
-    else if (currentIndex >= lGameFocusableItems.length)
       currentIndex = 0;
+    else if (currentIndex >= numFocusable)
+      currentIndex = numFocusable - 1;
   }
 
   lGameFocusableItems[currentIndex].focus({ focusVisible: true });
