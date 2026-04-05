@@ -404,6 +404,16 @@ select {
   display: inline-block;
 }
 
+.guess-icon:not(:focus, :focus-visible) {
+  padding: 2px;
+}
+
+.guess-icon:focus,
+.guess-icon:focus-visible {
+  outline: none;
+  border : 2px solid yellow;
+}
+
 .guess-icon:hover {
   cursor: url('img/sCursorHand.png'), pointer;
 }
@@ -485,7 +495,8 @@ select {
   }
 }
 
-.character-name-popup:not(:has(+.character-img-frame:hover)) {
+.character-name-popup:not(:has(+.character-img-frame:hover,
+    +.character-img-frame:focus, +.character-img-frame:focus-visible)) {
   display: none;
 }
 
@@ -502,13 +513,25 @@ select {
   cursor: url('img/sCursorHand.png'), pointer;
 }
 
-.active .character-img-frame,
-.active .character-name-popup {
+.character-img-frame,
+.character-name-popup {
   border-color: white;
+}
+
+.character-img-frame:focus,
+.character-img-frame:focus-visible {
+  border-color: yellow;
+  outline     : none;
 }
 
 .inactive .character-img-frame {
   filter: brightness(0.1) saturate(0);
+}
+
+.inactive .character-img-frame:hover,
+.inactive .character-img-frame:focus,
+.inactive .character-img-frame:focus-visible {
+  filter: brightness(0.3);
 }
 
 .inactive .character-name-popup {
