@@ -325,16 +325,23 @@ select {
   --heart-scale: 3;
   --heart-width: calc(var(--heart-scale) * 20px);
 
-  --card-scale: 2;
+  --card-scale     : 2;
+  --your-char-scale: 2;
 
-  --card-img-width   : calc(var(--card-scale) * 40px);
-  --card-border-width: calc(var(--card-scale) * 2px);
-  --card-column-gap  : calc(var(--card-scale) * 8px);
+  --card-base-img-width   : 40px;
+  --card-base-img-height  : 64px;
+  --card-base-border-width: 2px;
+  --card-base-column-gap  : 8px;
+  --card-base-row-gap     : 4px;
+
+  --card-img-width   : calc(var(--card-scale) * var(--card-base-img-width));
+  --card-border-width: calc(var(--card-scale) * var(--card-base-border-width));
+  --card-column-gap  : calc(var(--card-scale) * var(--card-base-column-gap));
   --card-frame-width : calc(var(--card-img-width) + 2 * var(--card-border-width));
   --card-column-width: calc(var(--card-frame-width) + var(--card-column-gap));
 
-  --card-img-height  : calc(var(--card-scale) * 64px);
-  --card-row-gap     : calc(var(--card-scale) * 4px);
+  --card-img-height  : calc(var(--card-scale) * var(--card-base-img-height));
+  --card-row-gap     : calc(var(--card-scale) * var(--card-base-row-gap));
   --card-frame-height: calc(var(--card-img-height) + 2 * var(--card-border-width));
   --card-row-height  : calc(var(--card-frame-height) + var(--card-row-gap));
 }
@@ -372,9 +379,9 @@ select {
 }
 
 #your-char-img-frame {
-  border: calc(2 * var(--card-border-width)) solid white;
-  width : calc(2 * var(--card-img-width) + 4 * var(--card-border-width));
-  height: calc(2 * var(--card-img-height) + 4 * var(--card-border-width));
+  border: calc(var(--your-char-scale) * var(--card-border-width)) solid white;
+  width : calc(var(--your-char-scale) * (var(--card-img-width) + 2 * var(--card-border-width)));
+  height: calc(var(--your-char-scale) * (var(--card-img-height) + 2 * var(--card-border-width)));
 
   display        : flex;
   justify-content: center;
@@ -386,6 +393,7 @@ select {
 }
 
 #guesses-line {
+  margin-bottom  : 0.5rem;
   align-self     : stretch;
   display        : flex;
   justify-content: space-around;

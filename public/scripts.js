@@ -210,13 +210,11 @@ async function startGame() {
   YOUR_CHAR_IMG.setAttribute("alt", yourCharInfo.name);
 
   // Set the image to be scaled based on its natural size
-  const cardScale = window.getComputedStyle(YOUR_CHAR_IMG).getPropertyValue('--card-scale');
   ++numImagesLoading;
   YOUR_CHAR_IMG.onload = () => {
     --numImagesLoading;
     // Set the image to be scaled based on its natural size
-    const yourCharImgWidth = 2 * YOUR_CHAR_IMG.naturalWidth * cardScale;
-    YOUR_CHAR_IMG.setAttribute("style", `width: ${yourCharImgWidth}px;`);
+    scaleImage(YOUR_CHAR_IMG, window.getComputedStyle(YOUR_CHAR_IMG).getPropertyValue('--your-char-scale'));
   }
 
   // Reset available guesses
@@ -359,6 +357,9 @@ const L_GUESS_ICONS = document.querySelectorAll(".guess-icon");
 
 const CARD_GRID = document.getElementById("card-grid");
 
+// Globals
+let cardScaleInfo = null;
+
 // Functions
 // ---------
 
@@ -385,6 +386,49 @@ function updateNumChars() {
   document.querySelectorAll(".cards-left-count").forEach((el) => {
     el.textContent = getNumActiveChars() + "/" + getNumChars();
   });
+}
+
+/**
+ * Scale an image with the optimal scaling factor to fit in the provided frame
+ * @param {HTMLImageElement} img 
+ */
+function scaleImage(img, frameScale = 1) {
+  // Determine card scale info if not already determined
+  if (!cardScaleInfo) {
+    const style = window.getComputedStyle(CARD_GRID);
+    const scale = style.getPropertyValue('--card-scale');
+    function getPxVal(x) {
+      return +(style.getPropertyValue(x).replace("px", ""));
+    }
+    cardScaleInfo = {
+      width: scale * getPxVal('--card-base-img-width'),
+      height: scale * getPxVal('--card-base-img-height'),
+      borderWidth: scale * getPxVal('--card-base-border-width')
+    }
+    cardScaleInfo.totalWidth = cardScaleInfo.width + 2 * cardScaleInfo.borderWidth;
+    cardScaleInfo.totalHeight = cardScaleInfo.height + 2 * cardScaleInfo.borderWidth;
+  }
+
+  // The maximum size we want the scaled image to be is the width of the frame, so we find the integer scale factor that
+  // makes it as big as possible while still less than this size
+
+  let width;
+  let naturalWidth = img.naturalWidth, totalWidth = cardScaleInfo.totalWidth * frameScale;
+
+  if (naturalWidth == 0) {
+    // Something went wrong with loading the image and we don't know its size, so size to the default image size
+    width = cardScaleInfo.width;
+  } else if (naturalWidth > totalWidth) {
+    // We'll need to scale it down
+    let scaleDownFactor = Math.ceil(naturalWidth / totalWidth);
+    width = Math.round(naturalWidth / scaleDownFactor);
+  } else {
+    // We'll need to either leave it alone or scale it up
+    let scaleUpFactor = Math.floor(totalWidth / naturalWidth);
+    width = naturalWidth * scaleUpFactor;
+  }
+
+  img.setAttribute("style", `width: ${width}px;`);
 }
 
 /**
@@ -439,14 +483,11 @@ async function loadCharacterSet(setName) {
     imgEl.setAttribute("src", charsetPath + "/" + charInfo.imageName);
     imgEl.setAttribute("alt", charInfo.name);
 
-    const cardScale = window.getComputedStyle(CARD_GRID).getPropertyValue('--card-scale');
-
     ++numImagesLoading;
     imgEl.onload = () => {
       --numImagesLoading;
       // Set the image to be scaled based on its natural size
-      const imgWidth = imgEl.naturalWidth * cardScale;
-      imgEl.setAttribute("style", `width: ${imgWidth}px;`);
+      scaleImage(imgEl);
     }
 
     const frameEl = newCard.querySelector(".character-img-frame");
