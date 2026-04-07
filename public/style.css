@@ -37,7 +37,8 @@ body {
   justify-content: stretch;
   align-items    : center;
 
-  background-color: black;
+  background-image: url('img/sBackground.gif');
+  background-size : 296px 250px;
 }
 
 /* Styling for common elements */
