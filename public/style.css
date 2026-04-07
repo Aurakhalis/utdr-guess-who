@@ -596,10 +596,7 @@ textarea {
 }
 
 .inactive .character-img-frame:hover,
-.inactive .character-img-frame:focus-visible {
-  filter: brightness(0.3);
-}
-
+.inactive .character-img-frame:focus-visible,
 .inactive .character-name-popup {
   filter: brightness(0.3);
 }
