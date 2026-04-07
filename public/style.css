@@ -619,5 +619,18 @@ textarea {
 /* Controls scene */
 
 #controls-scene {
-  padding: 1rem 0;
+  padding   : 1rem 0;
+  align-self: center;
+  max-width : 735px;
+}
+
+#controls-grid {
+  display              : grid;
+  grid-template-columns: 1fr 2fr;
+  row-gap              : 1rem;
+  column-gap           : 1rem;
+}
+
+#controls-grid .left-column {
+  text-align: right;
 }
