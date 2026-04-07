@@ -531,6 +531,8 @@ textarea {
 }
 
 .character-img-frame {
+  position: relative;
+
   width       : var(--card-frame-width);
   height      : var(--card-frame-height);
   border-width: var(--card-border-width);
@@ -551,6 +553,28 @@ textarea {
 .character-img-frame:focus-visible {
   border-color: yellow;
   outline     : none;
+}
+
+.marked .character-img-frame {
+  border-color: #b0b0b0;
+}
+
+.unmarked .character-img-frame .character-question-marker {
+  display: none;
+}
+
+.character-question-marker {
+  position: absolute;
+  top     : 0;
+  right   : 0;
+
+  width : 0.5rem;
+  height: 0.5rem;
+
+  background-color: #b0b0b0;
+  color           : black;
+  font-size       : 0.5rem;
+  text-align      : center;
 }
 
 .inactive .character-img-frame {
