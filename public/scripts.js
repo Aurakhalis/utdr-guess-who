@@ -614,34 +614,62 @@ function navigateGame(e) {
   // Get current position
   let currentIndex = lGameFocusableItems.findIndex((el) => document.activeElement === el);
 
+  const numButtonsBeforePlayArea = lGameButtonsBeforePlayArea.length;
+  const numGuessIcons = L_GUESS_ICONS.length;
+  const numCharacterCards = lCharacterCardFrames.length;
+  const numFocusable = lGameFocusableItems.length;
+
   // Check the direction of navigation
   let dir;
-  if (e.key === "ArrowDown") {
-    dir = 2;
-  } else if (e.key === "ArrowUp") {
-    dir = -2;
-  } else if (e.key === "ArrowRight") {
-    dir = 1;
-  } else if (e.key === "ArrowLeft") {
-    dir = -1;
-  } else if (e.key === " " || e.key === "z" || e.key === "Enter" || e.key === "Return" && currentIndex != -1) {
-    e.stopPropagation();
-    e.preventDefault();
-    document.activeElement.click();
-    return;
-  } else {
-    return;
+  switch (e.key) {
+    case "ArrowDown":
+      dir = 2;
+      break;
+
+    case "ArrowUp":
+      dir = -2;
+      break;
+
+    case "ArrowRight":
+      dir = 1;
+      break;
+
+    case "ArrowLeft":
+      dir = -1;
+      break;
+
+    case " ":
+    case "z":
+    case "Enter":
+    case "Return":
+      if (currentIndex === -1)
+        return;
+      e.stopPropagation();
+      e.preventDefault();
+      // Simulate a click event
+      document.activeElement.click();
+      return;
+
+    case "x":
+      if (currentIndex < numButtonsBeforePlayArea + numGuessIcons ||
+        currentIndex >= numButtonsBeforePlayArea + numGuessIcons + numCharacterCards)
+        return;
+      e.stopPropagation();
+      e.preventDefault();
+      // Simulate a right-click event, which will trigger marking the card if a card is selected
+      document.activeElement.dispatchEvent(new MouseEvent('contextmenu',
+        { bubbles: true, cancelable: true, view: window }));
+      return;
+
+    default:
+      return;
   }
 
   if (currentIndex == -1) {
     // Not in the options currently, so go to the first character card
     lCharacterCardFrames[0].focus({ focusVisible: true });
+    return;
   }
-
-  const numButtonsBeforePlayArea = lGameButtonsBeforePlayArea.length;
-  const numGuessIcons = L_GUESS_ICONS.length;
-  const numCharacterCards = lCharacterCardFrames.length;
-  const numFocusable = lGameFocusableItems.length;
 
   if (Math.abs(dir) > 1) {
     // If dir is 2 or -2, we're moving down or up respectively
