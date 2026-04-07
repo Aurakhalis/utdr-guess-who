@@ -554,7 +554,12 @@ function flipGuess(e) {
  * @param {Event} e 
  */
 function flipCard(e) {
-  const cardClassList = e.currentTarget.closest(".character-card").classList;
+  let frameEl;
+  if (e.currentTarget)
+    frameEl = e.currentTarget;
+  else
+    frameEl = e;
+  const cardClassList = frameEl.closest(".character-card").classList;
 
   if (cardClassList.contains("active")) {
     cardClassList.remove("active");
@@ -659,6 +664,11 @@ function navigateGame(e) {
       // Simulate a right-click event, which will trigger marking the card if a card is selected
       document.activeElement.dispatchEvent(new MouseEvent('contextmenu',
         { bubbles: true, cancelable: true, view: window }));
+      return;
+
+    case "c":
+      // Flip all cards
+      lCharacterCardFrames.forEach((el) => flipCard(el));
       return;
 
     default:
