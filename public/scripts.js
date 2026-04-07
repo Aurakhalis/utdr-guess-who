@@ -522,6 +522,7 @@ async function loadCharacterSet(setName) {
     const frameEl = newCard.querySelector(".character-img-frame");
     frameEl.addEventListener("click", flipCard);
     frameEl.addEventListener("dblclick", markCard);
+    frameEl.addEventListener("contextmenu", markCard, false);
 
     CARD_GRID.appendChild(newCard);
   });
@@ -571,6 +572,8 @@ function flipCard(e) {
  * @param {Event} e 
  */
 function markCard(e) {
+  e.preventDefault();
+
   const cardClassList = e.currentTarget.closest(".character-card").classList;
 
   if (cardClassList.contains("marked")) {
@@ -580,6 +583,8 @@ function markCard(e) {
     cardClassList.add("marked");
     cardClassList.remove("unmarked");
   }
+
+  return false;
 }
 
 /**

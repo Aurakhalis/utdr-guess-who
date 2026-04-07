@@ -550,13 +550,15 @@ textarea {
   border-color: white;
 }
 
-.character-img-frame:focus-visible {
+.character-img-frame:focus-visible,
+.character-card:has(.character-img-frame:focus-visible) .character-name-popup {
   border-color: yellow;
   outline     : none;
 }
 
-.marked .character-img-frame {
-  border-color: #b0b0b0;
+.marked .character-img-frame,
+.marked .character-name-popup {
+  border-color: purple;
 }
 
 .unmarked .character-img-frame .character-question-marker {
@@ -568,13 +570,17 @@ textarea {
   top     : 0;
   right   : 0;
 
-  width : 0.5rem;
-  height: 0.5rem;
+  width : 0.625rem;
+  height: 0.625rem;
 
-  background-color: #b0b0b0;
-  color           : black;
-  font-size       : 0.5rem;
-  text-align      : center;
+  background-color: purple;
+}
+
+.character-question-icon {
+  padding-top: 2px;
+  color      : white;
+  font-size  : 0.5rem;
+  text-align : center;
 }
 
 .inactive .character-img-frame {
