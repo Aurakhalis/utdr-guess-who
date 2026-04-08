@@ -1,5 +1,12 @@
-# utdr-guess-who
-Guess Who games for sets of Undertale and Deltarune characters
+# UTDR Guess Who
+
+This is the repo for a Guess Who game for sets of Undertale and Deltarune characters, based on the original concept by Seek's Stuff: https://seeksstuff.itch.io/deltarune-guess-who.
+
+To play the game, go here: https://wearsnomask.github.io/utdr-guess-who/
+
+This rewrites the original game to function as a web app, for better cross-platform compatibility, sets it up to be easily moddable to add characters or whole new sets of characters, and adds a few other features.
+
+This is a fan game of a fan game, and isn't officially associated with Toby Fox and team or Seek's Stuff. Undertale and Deltarune characters are used under the broad permission Toby Fox has granted for non-commercial fangames.
 
 ## Adding Character Sets
 
@@ -17,12 +24,23 @@ Try to get original sprites if possible, for the best quality - pixel art can ge
 
 ### Adding it to the game
 
-To be able to add any character sets to the game, fork this project, and set it up to be served publicly via GitHub Pages. Then, edit the repo by adding in a folder with your character set in the "public/character-sets" folder. The name of the folder will be used exactly as it for the name of the character set.
+To be able to add any character sets to the game, fork this project, and set it up to be served publicly via GitHub Pages, using the option to deploy via a workflow (using the existing "static.yml" workflow). If you aren't familiar with using GitHub Pages, a good tutorial on using it is provided by The Odin Project here: https://www.theodinproject.com/lessons/foundations-recipes#viewing-your-project-on-the-web. Or if all of this working with a repo is something you aren't familiar with, other tutorials on this site can help you with that too.
+
+Then, edit the repo by adding in a folder with your character set in the "public/character-sets" folder. The name of the folder will be used exactly as it for the name of the character set.
 
 Inside this folder, add the images for all the characters in your set, with the name format `#-Name.png`, e.g. `1-Kris.png`, `2-Susie.png`, `3-Annoying Dog.png`, etc. The number for each indicates the order they'll be displayed in-game, and the name will be shown as their name. If the names don't match this format or any numbers are duplicated, the game won't be able to detect them.
 
 And... that's it! Commit the changes, push to the repository, and wait a minute for it to be deployed. Your version of the game will be deployed at an address that looks like "https://your-github-username.github.io/utdr-guess-who/", and you can share this with your friends so you can all play with the character set you added.
 
 ## Credits
+
+**Undertale and Deltarune game concepts:** Toby Fox and team, notably Temmie Change for character designs used here.
+
+* [Undertale](https://undertale.com/)
+* [Deltarune](https://deltarune.com/)
+
+**Original UTDR Guess Who game concept and design:** [Seek's Stuff](https://www.youtube.com/@Seeks_stuff)
+
+* [Seek's Cool Deltarune Guess Who Game](https://seeksstuff.itch.io/deltarune-guess-who)
 
 **Font:** m6x11 by [Daniel Linssen](https://managore.itch.io/) (https://managore.itch.io/m6x11)
