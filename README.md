@@ -32,6 +32,13 @@ Inside this folder, add the images for all the characters in your set, with the 
 
 And... that's it! Commit the changes, push to the repository, and wait a minute for it to be deployed. Your version of the game will be deployed at an address that looks like "https://your-github-username.github.io/utdr-guess-who/", and you can share this with your friends so you can all play with the character set you added.
 
+## Contact/Socials
+
+**Charlotte Wears No Mask**
+
+- https://x.com/LadyWearsNoMasc
+- https://bsky.app/profile/ladywearsnomask.bsky.social
+
 ## Credits
 
 **Undertale and Deltarune game concepts:** Toby Fox and team, notably Temmie Change for character designs used here.
