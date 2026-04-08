@@ -36,7 +36,7 @@ And... that's it! Commit the changes, push to the repository, and wait a minute 
 
 **Charlotte Wears No Mask**
 
-- https://x.com/LadyWearsNoMasc
+- https://x.com/LadyWearsNoMask
 - https://bsky.app/profile/ladywearsnomask.bsky.social
 
 ## Credits
