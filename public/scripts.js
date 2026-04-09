@@ -176,11 +176,6 @@ function cycleSelect(selectEl) {
 
 }
 
-// Setup
-// -----
-
-window.addEventListener("keydown", navigateTextScenes);
-
 
 // Name scene
 // ==========
@@ -264,7 +259,15 @@ const CHARSET_OPTION_TEMPLATE = document.getElementById("charset-option-template
 // ---------
 
 function initMenuScene() {
+  window.addEventListener("keydown", navigateMenu);
+  window.addEventListener("resize", fixMenuTabIndex);
+  fixMenuTabIndex();
   MENU_START_LINK.focus({ focusVisible: true });
+}
+
+function exitMenuScene() {
+  window.removeEventListener("keydown", navigateMenu);
+  window.removeEventListener("resize", fixMenuTabIndex);
 }
 
 async function startGame() {
@@ -445,12 +448,10 @@ function fixMenuTabIndex() {
 // Setup
 // -----
 
-window.addEventListener("keydown", navigateMenu);
-window.addEventListener("resize", fixMenuTabIndex);
 MENU_START_LINK.addEventListener("click", startGame);
 MENU_NAME_LINK.addEventListener("click", () => switchScene(NAME_SCENE));
 MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_SCENE));
-const menuSceneSwitchWatcher = new SceneSwitchWatcher(MENU_SCENE, initMenuScene, null);
+const menuSceneSwitchWatcher = new SceneSwitchWatcher(MENU_SCENE, initMenuScene, exitMenuScene);
 
 
 // Game scene
@@ -487,6 +488,17 @@ let lGameFocusableItems = null;
 
 // Functions
 // ---------
+
+function initGameScene() {
+  window.addEventListener("keydown", navigateGame);
+  window.addEventListener("resize", arrangeGameFocusableItems);
+  arrangeGameFocusableItems();
+}
+
+function exitGameScene() {
+  window.removeEventListener("keydown", navigateGame);
+  window.removeEventListener("resize", arrangeGameFocusableItems);
+}
 
 /**
  * Open the notes dialog
@@ -864,9 +876,6 @@ function navigateGame(e) {
 // Setup
 // -----
 
-window.addEventListener("keydown", navigateGame);
-window.addEventListener("resize", arrangeGameFocusableItems);
-
 QUIT_GAME_BUTTON.addEventListener("click", () => switchScene(MENU_SCENE));
 RESTART_GAME_BUTTON.addEventListener("click", startGame);
 
@@ -878,6 +887,9 @@ L_INSTRUCTIONS_BUTTONS.forEach((el) => el.addEventListener("click", () => switch
 
 L_GUESS_ICONS.forEach((el) => el.addEventListener("click", flipGuess));
 // Character cards are added dynamically, so the click event to flip them has to be added when they're added
+
+const gameSceneSwitchWatcher = new SceneSwitchWatcher(GAME_SCENE, initGameScene, exitGameScene);
+
 
 // Instructions scene
 // ==================
@@ -895,13 +907,19 @@ const INSTRUCTIONS_BACK_BUTTON = document.getElementById("instructions-back");
 function initInstructionsScene() {
   INSTRUCTIONS_BACK_BUTTON.focus({ focusVisible: true });
   INSTRUCTIONS_SCENE_HEADER.scrollIntoView();
+  window.addEventListener("keydown", navigateTextScenes);
+}
+
+function exitInstructionsScene() {
+  window.removeEventListener("keydown", navigateTextScenes);
 }
 
 // Setup
 // -----
 
 INSTRUCTIONS_BACK_BUTTON.addEventListener("click", () => switchScene(lastScene));
-const instructionsSceneSwitchWatcher = new SceneSwitchWatcher(INSTRUCTIONS_SCENE, initInstructionsScene, null);
+const instructionsSceneSwitchWatcher = new SceneSwitchWatcher(INSTRUCTIONS_SCENE,
+  initInstructionsScene, exitInstructionsScene);
 
 
 // Controls scene
@@ -920,13 +938,18 @@ const CONTROLS_BACK_BUTTON = document.getElementById("controls-back");
 function initControlsScene() {
   CONTROLS_BACK_BUTTON.focus({ focusVisible: true });
   CONTROLS_SCENE_HEADER.scrollIntoView();
+  window.addEventListener("keydown", navigateTextScenes);
+}
+
+function exitControlsScene() {
+  window.removeEventListener("keydown", navigateTextScenes);
 }
 
 // Setup
 // -----
 
 CONTROLS_BACK_BUTTON.addEventListener("click", () => switchScene(lastScene));
-const controlsSceneSwitchWatcher = new SceneSwitchWatcher(CONTROLS_SCENE, initControlsScene, null);
+const controlsSceneSwitchWatcher = new SceneSwitchWatcher(CONTROLS_SCENE, initControlsScene, exitControlsScene);
 
 
 // Final setup
