@@ -1,6 +1,67 @@
 // Globally relevant
 // =================
 
+// Class definitions
+// -----------------
+
+/**
+ * A class to watch a scene for when it's entered or exited and trigger callbacks on each, so that
+ * we can define tasks we want to run whenever a scene is entered or exited
+ */
+class SceneSwitchWatcher {
+
+  /**
+   * @param {Element} targetNode 
+   * @param {Function} sceneEntryCallback 
+   * @param {Function} sceneExitCallback 
+   */
+  constructor(targetNode, sceneEntryCallback, sceneExitCallback) {
+    this.targetNode = targetNode
+
+    // If entry or exit callbacks aren't provided, define them as dummy functions
+    if (typeof sceneEntryCallback === "function")
+      this.sceneEntryCallback = sceneEntryCallback
+    else
+      this.sceneEntryCallback = () => { return; };
+    if (typeof sceneExitCallback === "function")
+      this.sceneExitCallback = sceneExitCallback
+    else
+      this.sceneExitCallback = () => { return; };
+    this.observer = null
+    this.lastClassState = targetNode.classList.contains("hidden")
+
+    this.init()
+  }
+
+  init() {
+    this.observer = new MutationObserver(this.mutationCallback);
+    this.observe();
+  }
+
+  observe() {
+    this.observer.observe(this.targetNode, { attributes: true });
+  }
+
+  disconnect() {
+    this.observer.disconnect();
+  }
+
+  mutationCallback = mutationsList => {
+    for (let mutation of mutationsList) {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        let currentClassState = mutation.target.classList.contains("hidden");
+        if (this.lastClassState !== currentClassState) {
+          this.lastClassState = currentClassState;
+          if (currentClassState)
+            this.sceneExitCallback();
+          else
+            this.sceneEntryCallback();
+        }
+      }
+    }
+  }
+}
+
 // Constants and globals
 // ---------------------
 
@@ -30,7 +91,7 @@ let lCharImageNames = null;
 let lCharInfo = null;
 let numImagesLoading = 0;
 
-// The player's character for this game
+// The player's character for the current game
 let yourCharIndex = null;
 
 
@@ -42,43 +103,18 @@ let yourCharIndex = null;
  * @param {Element} newScene 
  */
 function switchScene(newScene = MENU_SCENE) {
-  // Custom tasks to run on each scene being switched from
-  if (lastScene === NAME_SCENE) {
-    NAME_INPUT.setAttribute("disabled", "disabled");
-  }
 
-  L_SCENES.forEach((el) => {
-    // Mark the current scene as the last scene
-    if (!el.classList.contains("hidden"))
+  // Find the current scene, deactivate it, and mark it as the last scene
+  for (let el of L_SCENES) {
+    if (!el.classList.contains("hidden")) {
+      el.classList.add("hidden");
       lastScene = el;
-    el.classList.add("hidden");
-  });
-  newScene.classList.remove("hidden");
-
-  // Custom tasks to run on each scene being switched to
-  switch (newScene) {
-    case NAME_SCENE:
-      NAME_INPUT.removeAttribute("disabled");
-      setTimeout(() => NAME_INPUT.focus({ focusVisible: true }), 100);
       break;
-
-    case MENU_SCENE:
-      MENU_START_LINK.focus({ focusVisible: true });
-      break;
-
-    case INSTRUCTIONS_SCENE:
-      INSTRUCTIONS_BACK_BUTTON.focus({ focusVisible: true });
-      INSTRUCTIONS_SCENE_HEADER.scrollIntoView();
-      break;
-
-    case CONTROLS_SCENE:
-      CONTROLS_BACK_BUTTON.focus({ focusVisible: true });
-      CONTROLS_SCENE_HEADER.scrollIntoView();
-      break;
-
-    default:
-      break;
+    }
   }
+
+  // Activate the new scene
+  newScene.classList.remove("hidden");
 }
 
 /**
@@ -159,6 +195,15 @@ const NAME_SUBMIT = document.getElementById("name-submit");
 // Functions
 // ---------
 
+function initNameScene() {
+  NAME_INPUT.removeAttribute("disabled");
+  setTimeout(() => NAME_INPUT.focus({ focusVisible: true }), 100);
+}
+
+function exitNameScene() {
+  NAME_INPUT.setAttribute("disabled", "disabled");
+}
+
 function setName(name) {
   sessionStorage["name"] = name;
   MENU_NAME.textContent = name;
@@ -189,6 +234,7 @@ NAME_INPUT.addEventListener("keydown", submitName);
 NAME_SUBMIT.addEventListener("click", submitName);
 if (sessionStorage.getItem("name"))
   NAME_INPUT.value = getName();
+const nameSceneSwitchWatcher = new SceneSwitchWatcher(NAME_SCENE, initNameScene, exitNameScene);
 
 
 // Menu scene
@@ -216,6 +262,10 @@ const CHARSET_OPTION_TEMPLATE = document.getElementById("charset-option-template
 
 // Functions
 // ---------
+
+function initMenuScene() {
+  MENU_START_LINK.focus({ focusVisible: true });
+}
 
 async function startGame() {
   // If the game is already loading, exit to avoid doubling up
@@ -400,6 +450,7 @@ window.addEventListener("resize", fixMenuTabIndex);
 MENU_START_LINK.addEventListener("click", startGame);
 MENU_NAME_LINK.addEventListener("click", () => switchScene(NAME_SCENE));
 MENU_INSTRUCTIONS_LINK.addEventListener("click", () => switchScene(INSTRUCTIONS_SCENE));
+const menuSceneSwitchWatcher = new SceneSwitchWatcher(MENU_SCENE, initMenuScene, null);
 
 
 // Game scene
@@ -841,10 +892,16 @@ const INSTRUCTIONS_BACK_BUTTON = document.getElementById("instructions-back");
 // Functions
 // ---------
 
+function initInstructionsScene() {
+  INSTRUCTIONS_BACK_BUTTON.focus({ focusVisible: true });
+  INSTRUCTIONS_SCENE_HEADER.scrollIntoView();
+}
+
 // Setup
 // -----
 
 INSTRUCTIONS_BACK_BUTTON.addEventListener("click", () => switchScene(lastScene));
+const instructionsSceneSwitchWatcher = new SceneSwitchWatcher(INSTRUCTIONS_SCENE, initInstructionsScene, null);
 
 
 // Controls scene
@@ -860,10 +917,16 @@ const CONTROLS_BACK_BUTTON = document.getElementById("controls-back");
 // Functions
 // ---------
 
+function initControlsScene() {
+  CONTROLS_BACK_BUTTON.focus({ focusVisible: true });
+  CONTROLS_SCENE_HEADER.scrollIntoView();
+}
+
 // Setup
 // -----
 
 CONTROLS_BACK_BUTTON.addEventListener("click", () => switchScene(lastScene));
+const controlsSceneSwitchWatcher = new SceneSwitchWatcher(CONTROLS_SCENE, initControlsScene, null);
 
 
 // Final setup
