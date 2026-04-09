@@ -74,6 +74,9 @@ const INSTRUCTIONS_SCENE = document.getElementById("instructions-scene");
 const CONTROLS_SCENE = document.getElementById("controls-scene");
 const CREDITS_SCENE = document.getElementById("credits-scene");
 
+// Other constants
+const SCREEN_SIZE_BREAKPOINT = 800;
+
 // Globals
 
 // The previously loaded scene, as a target for any Back buttons
@@ -422,13 +425,26 @@ function navigateMenu(e) {
     // If we're still in the config options, go to the last main menu option
     if (currentIndex >= L_MENU_MAIN_OPTIONS.length)
       currentIndex = L_MENU_MAIN_OPTIONS.length - 1;
+  } else if ((currentIndex == L_MENU_MAIN_OPTIONS.length - 1 && dir == 1) ||
+    (currentIndex == L_MENU_MAIN_OPTIONS.length && dir == -1)) {
+    // We would be moving between menus, so do nothing
+    return;
   } else {
-    // dir is -1 or 1, so we're moving up or down
+    // dir is -1 or 1, so we're moving up or down within the same menu
     currentIndex += dir;
-    if (currentIndex < 0)
-      currentIndex = 0;
-    else if (currentIndex >= L_MENU_OPTIONS.length)
-      currentIndex = L_MENU_OPTIONS.length - 1;
+    if (currentIndex < 0) {
+      // Loop around only in small-window mode, where the config menu is placed on top of the main menu
+      if (window.innerWidth <= SCREEN_SIZE_BREAKPOINT)
+        currentIndex = L_MENU_OPTIONS.length - 1;
+      else
+        currentIndex = 0;
+    }
+    else if (currentIndex >= L_MENU_OPTIONS.length) {
+      if (window.innerWidth <= SCREEN_SIZE_BREAKPOINT)
+        currentIndex = 0;
+      else
+        currentIndex = L_MENU_OPTIONS.length - 1;
+    }
   }
 
   L_MENU_OPTIONS[currentIndex].focus({ focusVisible: true });
@@ -453,7 +469,7 @@ async function loadCharacterSetList() {
 function fixMenuTabIndex() {
   // Check if we're above or below the breakpoint, and set the tabindex appropriately so tabbing will behave as
   // expected
-  if (window.innerWidth <= 800) {
+  if (window.innerWidth <= SCREEN_SIZE_BREAKPOINT) {
     L_MENU_MAIN_OPTIONS.forEach((e) => e.setAttribute("tabindex", "2"));
     L_MENU_CONFIG_OPTIONS.forEach((e) => e.setAttribute("tabindex", "1"));
   } else {
@@ -737,7 +753,7 @@ function markCard(e) {
  * Sets up the list of all focusable items in the game scene, in the order they'll appear with the current window width
  */
 function arrangeGameFocusableItems() {
-  if (window.innerWidth <= 800) {
+  if (window.innerWidth <= SCREEN_SIZE_BREAKPOINT) {
     lGameButtonsBeforePlayArea = [QUIT_GAME_BUTTON, RESTART_GAME_BUTTON,
       L_NOTES_BUTTONS[0], L_CONTROLS_BUTTONS[0], L_INSTRUCTIONS_BUTTONS[0]];
     lGameButtonsAfterPlayArea = [];
