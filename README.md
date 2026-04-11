@@ -1,4 +1,4 @@
-# UTDR Guess Who
+# UTDR Guess Who Unlimited
 
 This is the repo for a Guess Who game for sets of Undertale and Deltarune characters, based on the original concept by Seek's Stuff: https://seeksstuff.itch.io/deltarune-guess-who.
 
