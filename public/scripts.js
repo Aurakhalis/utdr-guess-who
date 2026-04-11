@@ -546,10 +546,42 @@ async function loadCharacterSetList() {
       "Try refreshing the page in case this is a temporary issue. The error message received was: \n" + err));
   lCharsets = charsetMeta.sets;
 
+  // Check through the names of character sets to determine how they should be sorted
+  const lSortedCharsets = [];
+  const lUnsortedCharsets = [];
+
+  lCharsets.forEach((charsetName) => {
+    // Check if this name starts with an index
+    let i = parseInt(charsetName.split("-")[0]);
+    if ((i === NaN) || (!charsetName.startsWith(i.toString()))) {
+      // Doesn't appear to start with an index, so add it to the unsorted list
+      lUnsortedCharsets.push({ name: charsetName, unindexedName: charsetName });
+      return;
+    }
+
+    // This appears to be indexed
+    let charsetNameInfo = { name: charsetName, unindexedName: charsetName.replace(i + "-", "") };
+
+    // Make sure it can fit into the sorted list and isn't already present
+    if (i > lSortedCharsets.length - 1)
+      lSortedCharsets.length = i + i;
+    if (lSortedCharsets[i] !== undefined) {
+      // This index is already in the list, so log an error and add it to the unsorted list
+      console.error("More than one character set has the index " + i + ". Sorting will not appear as intended.");
+      lUnsortedCharsets.push(charsetNameInfo);
+      return;
+    }
+    lSortedCharsets[i] = charsetNameInfo;
+  });
+
   // Fill the options for the character set select box
-  lCharsets.forEach((setName) => {
+  const lAllCharsets = [...lSortedCharsets, ...lUnsortedCharsets];
+  lAllCharsets.forEach((charsetNameInfo) => {
+    if (charsetNameInfo === undefined)
+      return;
     const newCharsetOption = document.importNode(CHARSET_OPTION_TEMPLATE.content, true).querySelector(".charset-option");
-    newCharsetOption.value = newCharsetOption.textContent = setName;
+    newCharsetOption.textContent = charsetNameInfo.unindexedName;
+    newCharsetOption.value = charsetNameInfo.name;
     CHARSET_SELECT.appendChild(newCharsetOption);
   });
 }
