@@ -669,15 +669,18 @@ textarea {
   position : absolute;
   bottom   : var(--card-row-height);
   z-index  : 2;
-  padding  : 0rem 0.5rem;
-  min-width: max-content;
-  max-width: 5rem;
+  padding  : 0.0625rem 0.5rem 0rem 0.5rem;
+  max-width: 10rem;
 
   border-width    : var(--card-border-width);
   border-style    : solid;
   background-color: black;
   font-size       : 0.75rem;
   text-align      : center;
+}
+
+.character-name-popup p {
+  line-height: 1rem;
 }
 
 .character-card:not(.steady-popup) .character-name-popup {
