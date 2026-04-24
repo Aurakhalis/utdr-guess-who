@@ -37,9 +37,33 @@ body {
   justify-content: stretch;
   align-items    : center;
 
-  background-image: url('img/sBackground.gif');
-  background-size : 296px 250px;
+  background-color     : #000000;
+  background-attachment: fixed;
+  background-image     :
+    url('img/bg1.png'),
+    url('img/bg2.png');
+  background-position:
+    0px 0px,
+    72px 0px;
+  background-size: 94px;
+  animation      : 2.67s linear infinite bg-slide;
 }
+
+@keyframes bg-slide {
+  from {
+    background-position:
+      0px 0px,
+      72px 0px;
+  }
+
+  to {
+    background-position:
+      -186px -186px,
+      165px 93px;
+  }
+}
+
+
 
 /* Styling for common elements */
 
