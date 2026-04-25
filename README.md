@@ -32,6 +32,27 @@ Inside this folder, add the images for all the characters in your set, with the 
 
 And... that's it! Commit the changes, push to the repository, and wait a minute for it to be deployed. Your version of the game will be deployed at an address that looks like "https://your-github-username.github.io/utdr-guess-who/", and you can share this with your friends so you can all play with the character set you added.
 
+### Enabling wiki lookup
+
+There's one extra feature you can add to your character set: Wiki lookup. If you don't set up anything special, then the "Look up character" option will do a Google search when used with your character set. But with a bit of extra config, you can set it to search a specific wiki for the character instead, like is done for the sets built into the game.
+
+To do this, add a file called "config.json" to the character set folder, with the contents:
+
+```json
+{"lookupUrl": "<insert-search-url-here>"}
+```
+
+In this, replace the string `<insert-search-url-here>` with a URL that can be used to run a search on your wiki of choice, using `%s` in place of the search string. For instance, let's say
+you want to search on [the Undertale wiki](https://undertale.wiki/). You can find the search string by going to that wiki, then performing a search that won't land any direct hits, e.g. searching for "my search string".
+
+Then, look at the URL you get. In this case it will be: `https://undertale.wiki/index.php?search=my+search+string&title=Special:Search&wprov=acrw1_-1&ns0=1` Copy this string into your "config.json" file, and replace the part of it that contains the string you searched for with `%s`. In this example, your config file will now look like this:
+
+```json
+{"lookupUrl": "https://undertale.wiki/index.php?search=%s&title=Special:Search&wprov=acrw1_-1&ns0=1"}
+```
+
+You can look at the existing "config.json" files in the character sets in this repo for other examples.
+
 ## Frequently Asked Questions
 
 ### How does this relate to the original game by Seek?
@@ -56,6 +77,7 @@ The following features have been added:
 - Support for multiple character sets (making it as easy as possible to mod and add more)
 - Ability to remember the user's name and skip the name-entry screen
 - Ability to inspect character images to look more closely at them (by pressing the I key or middle-clicking, then +/- keys or mousewheel to scale the size). These controls may not work on mobile devices, but you can use pinch-to-zoom there to achieve the same effect
+- Ability to look up a character on the game's wiki by using the L button or clicking the "Look up character" button then the character you want to look up
 
 ### Can I further mod/extend this myself?
 
@@ -88,3 +110,6 @@ Yes, please do! This project has a permissive license, so you don't even need to
 **Special Thanks:**
 
 * Mysteri Gii - Testing, feedback, and support
+
+- https://x.com/MysteryGii0
+- https://bsky.app/profile/mysterygii0.bsky.social

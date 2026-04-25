@@ -14,7 +14,6 @@
 }
 
 :root {
-  cursor          : url('img/sCursor.png'), auto;
   image-rendering : pixelated;
   background-color: #FFFFFF00;
 }
@@ -36,6 +35,8 @@ body {
   flex-direction : column;
   justify-content: stretch;
   align-items    : center;
+
+  cursor: url('img/sCursor.png'), auto;
 
   background-color     : #000000;
   background-attachment: fixed;
@@ -63,7 +64,9 @@ body {
   }
 }
 
-
+[lookup-mode='mouse'] body {
+  cursor: url('img/sCursorSearch.png'), help;
+}
 
 /* Styling for common elements */
 
@@ -460,6 +463,16 @@ textarea {
   }
 }
 
+#game-lookup-cursor {
+  display : none;
+  position: absolute;
+  z-index : 5;
+}
+
+[lookup-mode='key'] #game-lookup-cursor {
+  display: block;
+}
+
 #game-notes-dialog[open] {
   display        : flex;
   flex-direction : column;
@@ -491,6 +504,17 @@ textarea {
   gap            : 0.25rem;
 }
 
+[lookup-mode='mouse'] .game-lookup,
+[lookup-mode='key'] .game-lookup {
+  border-color: yellow;
+  color       : yellow;
+  cursor      : url('img/sCursorSearch.png'), help;
+}
+
+[lookup-mode='mouse'] .game-lookup {
+  cursor: url('img/sCursorSearch.png'), help;
+}
+
 #small-screen-name-display {
   padding-top: 1rem;
 }
@@ -519,6 +543,10 @@ textarea {
   align-items    : center;
 }
 
+[lookup-mode='mouse'] #your-char-img-frame {
+  cursor: url('img/sCursorSelect.png'), help;
+}
+
 .character-card:not(.inspect, .inspect-fading) .inspect-img-frame {
   display: none;
 }
@@ -530,6 +558,10 @@ textarea {
   animation: 0.125s ease-out 1 grow;
   cursor   : url('img/sCursorHand.png'), pointer;
   scale    : calc(0.5 * var(--inspect-scale));
+}
+
+[lookup-mode='true'] .inspect-img-frame {
+  cursor: url('img/sCursorSelect.png'), help;
 }
 
 .character-img-frame:focus-visible+.inspect-img-frame {
@@ -707,7 +739,7 @@ textarea {
 .character-card.inspect .character-name-popup {
   animation: 0.125s ease-out 1 shift-up;
   scale    : calc(var(--inspect-scale) * 100%);
-  bottom   : calc((0.5 + 0.5 * var(--inspect-scale)) * var(--card-row-height));
+  bottom   : calc((0.25 + 0.75 * var(--inspect-scale)) * var(--card-row-height));
 }
 
 @keyframes shift-up {
@@ -718,7 +750,7 @@ textarea {
 
   to {
     scale : calc(var(--inspect-scale) * 100%);
-    bottom: calc((0.5 + 0.5 * var(--inspect-scale)) * var(--card-row-height));
+    bottom: calc((0.25 + 0.75 * var(--inspect-scale)) * var(--card-row-height));
   }
 }
 
@@ -731,7 +763,7 @@ textarea {
 @keyframes shift-down {
   from {
     scale : calc(var(--inspect-scale) * 100%);
-    bottom: calc((0.5 + 0.5 * var(--inspect-scale)) * var(--card-row-height));
+    bottom: calc((0.25 + 0.75 * var(--inspect-scale)) * var(--card-row-height));
   }
 
   to {
@@ -753,6 +785,10 @@ textarea {
   align-items    : center;
 
   cursor: url('img/sCursorHand.png'), pointer;
+}
+
+[lookup-mode='mouse'] .character-img-frame {
+  cursor: url('img/sCursorSelect.png'), help;
 }
 
 .character-img-frame,
@@ -832,6 +868,7 @@ textarea {
 
 #controls-grid .left-column {
   text-align: right;
+  color     : yellow;
 }
 
 /* Credits scene */

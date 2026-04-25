@@ -89,18 +89,6 @@ let gameLoading = false;
 // Loaded info about all available character sets
 let lCharsets = null;
 
-// Info about and in the currently-loaded character set
-let loadedCharset = null;
-let charsetPath = null;
-let lCharImageNames = null;
-let lCharInfo = null;
-let numImagesToLoadTotal = 0;
-let numImagesLoading = 0;
-
-// The player's character for the current game
-let yourCharIndex = null;
-
-
 // Functions
 // ---------
 
@@ -413,6 +401,9 @@ async function startGame() {
   }
   await loadCharacterSet(setName);
 
+  // Make sure lookup mode starts disabled
+  setOffLookupMode();
+
   // Store a list of all focusable character card frames
   lCharacterCardFrames = document.querySelectorAll(".character-card .character-img-frame");
   arrangeGameFocusableItems();
@@ -430,6 +421,7 @@ async function startGame() {
   yourCharIndex = Math.floor(Math.random() * getNumChars());
   const yourCharInfo = lCharInfo[yourCharIndex];
   YOUR_CHAR_NAME.textContent = yourCharInfo.name;
+  YOUR_CHAR_IMG_FRAME.value = yourCharInfo.name;
   YOUR_CHAR_IMG.setAttribute("alt", yourCharInfo.name);
 
   // Set the image to be scaled based on its natural size
@@ -644,23 +636,30 @@ const menuSceneSwitchWatcher = new SceneSwitchWatcher(MENU_SCENE, initMenuScene,
 // Constant DOM references
 const CHARACTER_CARD_TEMPLATE = document.getElementById("character-card-template");
 
+const GAME_LOOKUP_CURSOR = document.getElementById("game-lookup-cursor");
+
 const GAME_NOTES_DIALOG = document.getElementById("game-notes-dialog");
 const GAME_NOTES_INPUT = document.getElementById("game-notes");
 const GAME_NOTES_CLOSE = document.getElementById("game-notes-close");
 
 const QUIT_GAME_BUTTON = document.getElementById("game-quit");
 const RESTART_GAME_BUTTON = document.getElementById("game-restart");
+const L_LOOKUP_BUTTONS = document.querySelectorAll(".game-lookup");
 const L_NOTES_BUTTONS = document.querySelectorAll(".game-notes");
 const L_CONTROLS_BUTTONS = document.querySelectorAll(".game-controls");
 const L_INSTRUCTIONS_BUTTONS = document.querySelectorAll(".game-instructions");
 
 const YOUR_CHAR_NAME = document.getElementById("your-char-name");
+const YOUR_CHAR_IMG_FRAME = document.getElementById("your-char-img-frame");
 const YOUR_CHAR_IMG = document.getElementById("your-char-img");
 const L_GUESS_ICONS = document.querySelectorAll(".guess-icon");
 
 const CARD_GRID = document.getElementById("card-grid");
 
 // Other constants
+const DEFAULT_LOOKUP_URL = "https://www.google.com/search?q=Undertale%20Deltarune%20%s&udm=14"
+const DEFAULT_CHARSET_CONFIG = { "lookupUrl": DEFAULT_LOOKUP_URL }
+
 const MIN_INSPECT_SCALE = 1.5;
 const MAX_INSPECT_SCALE = 8;
 const INSPECT_SCALE_INCREMENT = 0.5;
@@ -676,6 +675,18 @@ let lGameButtonsBeforePlayArea = null;
 let lGameButtonsAfterPlayArea = null;
 let lGameFocusableItems = null;
 
+// Info about and in the currently-loaded character set
+let loadedCharset = null;
+let charsetPath = null;
+let charsetConfig = null;
+let lCharImageNames = null;
+let lCharInfo = null;
+let numImagesToLoadTotal = 0;
+let numImagesLoading = 0;
+
+// The player's character for the current game
+let yourCharIndex = null;
+
 // Functions
 // ---------
 
@@ -688,6 +699,126 @@ function initGameScene() {
 function exitGameScene() {
   window.removeEventListener("keydown", navigateGame);
   window.removeEventListener("resize", arrangeGameFocusableItems);
+}
+
+// Functions to set/get aspects of lookup mode
+
+function setMouseLookupMode() {
+  document.documentElement.setAttribute("lookup-mode", "mouse");
+
+  // Remove any events to switch to mouse lookup mode
+  window.removeEventListener("mousemove", setMouseLookupMode);
+}
+
+function setKeyLookupMode() {
+  document.documentElement.setAttribute("lookup-mode", "key");
+
+  // Prepare an event to switch to mouse lookup move when the mouse is moved
+  window.addEventListener("mousemove", setMouseLookupMode);
+}
+
+function setOffLookupMode() {
+  window.removeEventListener("mousemove", setMouseLookupMode);
+  window.removeEventListener("click", lookupTarget);
+  document.documentElement.setAttribute("lookup-mode", "off");
+}
+
+function getLookupMode() {
+  return document.documentElement.getAttribute("lookup-mode");
+}
+
+function lookupModeEnabled() {
+  const lookupMode = getLookupMode();
+  return lookupMode && lookupMode !== "off";
+}
+
+function mouseLookupModeEnabled() {
+  return getLookupMode() === "mouse";
+}
+
+function keyLookupModeEnabled() {
+  return getLookupMode() === "key";
+}
+
+/**
+ * Start lookup mode
+ */
+function startLookupMode(e) {
+  // If this gets triggered when we're already in lookup mode, end it
+  if (lookupModeEnabled()) {
+    setOffLookupMode();
+    return;
+  }
+
+  if (e instanceof PointerEvent && e.pointerId !== -1)
+    setMouseLookupMode();
+  else {
+    setKeyLookupMode();
+    // If starting in key mode, move focus to the first character card
+    lCharacterCardFrames[0].focus({ focusVisible: true });
+  }
+
+  // Prepare an event to look up the target
+  window.addEventListener("click", lookupTarget);
+
+  // Set the lookup mode cursor in the proper position
+  updateLookupCursorPosition();
+
+  // Stop propagation, as otherwise the lookupTarget function will be called immediately
+  e.stopPropagation();
+}
+
+/**
+ * Look up the target character being hovered over
+ */
+function lookupTarget(e) {
+
+  // First, figure out what to look up. Check the Your Character frame, as well as all character cards. What feature we
+  // check for depends on which lookup mode we're in
+  let lookupFeature;
+  if (keyLookupModeEnabled())
+    lookupFeature = ":focus-visible";
+  else if (mouseLookupModeEnabled())
+    lookupFeature = ":hover";
+  else
+    lookupFeature = ":is(:focus-visible, :hover)";
+  let imgFrame = document.querySelector(`#your-char-img-frame${lookupFeature}, .character-img-frame${lookupFeature}, ` +
+    `.inspect-img-frame${lookupFeature}`);
+
+  if (!imgFrame) {
+    // Nothing is hovered over, so end lookup mode and return without doing anything else
+    setOffLookupMode();
+    return;
+  }
+
+  // Get the image frame, which will have the character name as its value
+  if (!imgFrame.classList.contains("img-frame")) {
+    imgFrame = imgFrame.closest(".character-card").querySelector(".img-frame");
+  }
+
+  let charName = imgFrame.value;
+
+  // Construct the URL for the search
+  let searchUrl = charsetConfig.lookupUrl;
+  searchUrl = searchUrl.replace("%s", charName.replace(" ", "%20"));
+  open(searchUrl);
+
+  // End lookup mode
+  setOffLookupMode();
+}
+
+function updateLookupCursorPosition() {
+
+  // Determine the position from the focused element, if any
+  const focusedElement = document.querySelector(":focus-visible");
+  if (!focusedElement)
+    return;
+
+  const rect = focusedElement.getBoundingClientRect();
+  const x = 0.5 * (rect.left + rect.right) + window.scrollX - 0.25 * GAME_LOOKUP_CURSOR.naturalWidth;
+  const y = 0.5 * (rect.top + rect.bottom) + window.scrollY - 0.5 * GAME_LOOKUP_CURSOR.naturalHeight;
+
+  GAME_LOOKUP_CURSOR.setAttribute("style", `top: ${y}px; left: ${x}px;`);
 }
 
 /**
@@ -783,13 +914,19 @@ async function loadCharacterSet(setName) {
   if (setName === loadedCharset)
     return;
 
+  // Load the meta file for the character set
   charsetPath = "character-sets/" + setName.replaceAll(" ", "%20");
-
-  // Fetch the characters in the set from the meta file
   const charMetaUrl = charsetPath + "/char-meta.json";
   const charsetMeta = await loadJSON(charMetaUrl)
     .catch((err) => alert("ERROR: Could not load character information from " + charMetaUrl + ".\n" +
       "Try refreshing the page in case this is a temporary issue. The error message received was: \n" + err));
+
+  // Get the config for the character set from the meta file
+  charsetConfig = charsetMeta.config;
+  if (charsetConfig === null)
+    charsetConfig = DEFAULT_CHARSET_CONFIG;
+
+  // Fetch the characters in the set from the meta file
   lCharImageNames = charsetMeta.chars;
   const dCharInfo = {};
 
@@ -834,6 +971,7 @@ async function loadCharacterSet(setName) {
     lCharInfo.push(charInfo);
     const newCard = document.importNode(CHARACTER_CARD_TEMPLATE.content, true).querySelector(".character-card");
 
+    newCard.querySelector(".character-img-frame").value = charInfo.name;
     newCard.querySelector(".character-name").textContent = charInfo.name;
 
     const imgEl = newCard.querySelector(".character-img");
@@ -926,6 +1064,10 @@ function flipGuess(e) {
  * @param {Event} e 
  */
 function flipCard(e) {
+
+  // Don't flip if we're in lookup mode
+  if (lookupModeEnabled())
+    return;
 
   let frameEl;
   if (!(frameEl = e.currentTarget || e.target))
@@ -1122,10 +1264,10 @@ function decreaseInspectScale() {
 function arrangeGameFocusableItems() {
   if (window.innerWidth <= SCREEN_SIZE_BREAKPOINT) {
     lGameButtonsBeforePlayArea = [QUIT_GAME_BUTTON, RESTART_GAME_BUTTON,
-      L_NOTES_BUTTONS[0], L_CONTROLS_BUTTONS[0], L_INSTRUCTIONS_BUTTONS[0]];
+      L_LOOKUP_BUTTONS[0], L_NOTES_BUTTONS[0], L_CONTROLS_BUTTONS[0], L_INSTRUCTIONS_BUTTONS[0]];
     lGameButtonsAfterPlayArea = [];
   } else {
-    lGameButtonsBeforePlayArea = [QUIT_GAME_BUTTON, RESTART_GAME_BUTTON, L_NOTES_BUTTONS[1]];
+    lGameButtonsBeforePlayArea = [QUIT_GAME_BUTTON, RESTART_GAME_BUTTON, L_LOOKUP_BUTTONS[1], L_NOTES_BUTTONS[1]];
     lGameButtonsAfterPlayArea = [L_CONTROLS_BUTTONS[1], L_INSTRUCTIONS_BUTTONS[1]];
   }
   lGameFocusableItems = [...lGameButtonsBeforePlayArea, ...L_GUESS_ICONS, ...lCharacterCardFrames,
@@ -1175,18 +1317,37 @@ function navigateGame(e) {
     case " ":
     case "z":
     case "Enter":
-      if (currentIndex === -1)
+      if (currentIndex === -1) {
+        // Nothing is selected, so do nothing (except dismiss lookup mode if in it)
+        if (lookupModeEnabled())
+          setOffLookupMode();
         return;
+      }
       e.stopPropagation();
       e.preventDefault();
-      // Simulate a click event
-      document.activeElement.click();
+      if (lookupModeEnabled()) {
+        lookupTarget(e);
+      } else {
+        // Simulate a click event
+        document.activeElement.click();
+      }
       return;
 
     case "x":
+      // Cancel button
+
+      // Dismiss lookup mode if in it
+      if (lookupModeEnabled()) {
+        setOffLookupMode();
+        return;
+      }
+
+      // Do nothing if not on a character card
       if (currentIndex < numButtonsBeforePlayArea + numGuessIcons ||
         currentIndex >= numButtonsBeforePlayArea + numGuessIcons + numCharacterCards)
         return;
+
+      // On a character card, so mark it
       e.stopPropagation();
       e.preventDefault();
       // Simulate a right-click event, which will trigger marking the card if a card is selected
@@ -1199,7 +1360,19 @@ function navigateGame(e) {
       lCharacterCardFrames.forEach((el) => flipCard(el));
       return;
 
+    case "l":
+      // Look up character
+      lookupTarget(e);
+      return;
+
     case "Escape":
+
+      // Dismiss lookup mode if in it
+      if (lookupModeEnabled()) {
+        setOffLookupMode();
+        return;
+      }
+
       if (GAME_NOTES_DIALOG.hasAttribute("open"))
         return;
       e.stopPropagation();
@@ -1231,9 +1404,18 @@ function navigateGame(e) {
       return;
   }
 
+  // If we get here, one of the buttons to navigate has been pressed
+
+  // If we were previously in mouse lookup mode, switch to key lookup mode
+  if (mouseLookupModeEnabled()) {
+    setKeyLookupMode();
+  }
+
   if (currentIndex == -1) {
     // Not in the options currently, so go to the first character card
     lCharacterCardFrames[0].focus({ focusVisible: true });
+    if (keyLookupModeEnabled())
+      updateLookupCursorPosition();
     return;
   }
 
@@ -1291,6 +1473,8 @@ function navigateGame(e) {
 
   lGameFocusableItems[currentIndex].focus({ focusVisible: true });
 
+  if (keyLookupModeEnabled())
+    updateLookupCursorPosition();
 }
 
 // Setup
@@ -1298,6 +1482,8 @@ function navigateGame(e) {
 
 QUIT_GAME_BUTTON.addEventListener("click", () => switchScene(MENU_SCENE));
 RESTART_GAME_BUTTON.addEventListener("click", startGame);
+
+L_LOOKUP_BUTTONS.forEach((el) => el.addEventListener("click", startLookupMode, false));
 
 L_NOTES_BUTTONS.forEach((el) => el.addEventListener("click", openNotes));
 GAME_NOTES_CLOSE.addEventListener("click", closeNotes);
