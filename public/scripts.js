@@ -270,12 +270,17 @@ const NAME_INPUT = document.getElementById("name-input");
 const NAME_SUBMIT = document.getElementById("name-submit");
 const NAME_REMEMBER = document.getElementById("remember-name");
 
+// Globals
+let naughtyPlayer = false;
+
 // Functions
 // ---------
 
 function initNameScene() {
-  NAME_INPUT.removeAttribute("disabled");
-  setTimeout(() => NAME_INPUT.focus({ focusVisible: true }), 100);
+  if (!naughtyPlayer) {
+    NAME_INPUT.removeAttribute("disabled");
+    setTimeout(() => NAME_INPUT.focus({ focusVisible: true }), 100);
+  }
 }
 
 function exitNameScene() {
@@ -305,7 +310,7 @@ function getName() {
  * @param {Event} e 
  */
 function submitName(e) {
-  // If this is a keyup event, check if the key is Enter before triggering
+  // If this is a keydown event, check if the key is Enter before triggering
   if (e.type === "keydown" && e.key !== "Enter")
     return;
   setName(NAME_INPUT.value);
@@ -313,10 +318,25 @@ function submitName(e) {
   e.stopPropagation();
 }
 
+/**
+ * Monitor the name for any naughty users
+ * @param {Event} e 
+ */
+function monitorName(e) {
+  const nameLower = NAME_INPUT.value.toLowerCase();
+  if (nameLower.includes("gaster") || nameLower.includes("wdg")) {
+    NAME_INPUT.value = "Jerry";
+    naughtyPlayer = true;
+    submitName(e);
+  }
+}
+
 // Setup
 // -----
 
 NAME_INPUT.addEventListener("keydown", submitName);
+NAME_INPUT.addEventListener("keyup", monitorName);
+NAME_INPUT.addEventListener("change", monitorName);
 NAME_SUBMIT.addEventListener("click", submitName);
 
 // Check if the user's name is saved, and set the name entry scene to be skipped if so
