@@ -323,7 +323,7 @@ function submitName(e) {
  * @param {Event} e 
  */
 function monitorName(e) {
-  const nameLower = NAME_INPUT.value.toLowerCase();
+  const nameLower = NAME_INPUT.value.toLowerCase().replaceAll(/\W/g, "");
   if (nameLower.includes("gaster") || nameLower.includes("wdg")) {
     NAME_INPUT.value = "Jerry";
     naughtyPlayer = true;
