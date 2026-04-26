@@ -372,6 +372,10 @@ textarea {
 
 /* Menu scene */
 
+.max-width-box:has(>#menu-scene:not(.hidden)) {
+  max-width: min(1200px, 95vw);
+}
+
 #menu-scene {
   padding        : 1rem 0;
   align-self     : flex-start;
@@ -381,7 +385,7 @@ textarea {
   align-items    : flex-start;
 }
 
-#menu-title-and-name {
+#menu-top-left {
   display        : flex;
   flex-direction : column;
   justify-content: flex-start;
@@ -403,6 +407,7 @@ textarea {
 
 #menu-options-config {
   text-align: right;
+  max-width : 17.5rem;
 }
 
 @media (max-width: 800px) {
