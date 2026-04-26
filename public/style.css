@@ -314,6 +314,10 @@ textarea {
   margin: 0 !important;
 }
 
+.small-bottom-margin {
+  margin-bottom: 0.25rem !important;
+}
+
 .no-bottom-margin {
   margin-bottom: 0 !important;
 }
@@ -393,7 +397,11 @@ textarea {
   display        : flex;
   flex-direction : column;
   justify-content: flex-start;
-  align-items    : center;
+  align-items    : flex-start;
+}
+
+#menu-top-left>p {
+  margin-left: 0.25rem;
 }
 
 #menu-logo {

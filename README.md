@@ -69,7 +69,7 @@ Removed features:
 The following features have been added:
 
 - New character sets:
-  - Undertale (soon!)
+  - Undertale
   - Undertale Yellow
 - Support for basically any device that can run a web browser
 - Flexible scaling and rearrangement of items to fit the size of your browser window
