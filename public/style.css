@@ -411,7 +411,10 @@ textarea {
 
 #menu-options-config {
   text-align: right;
-  max-width : 17.5rem;
+}
+
+#menu-spoiler-warning {
+  max-width: 17.5rem;
 }
 
 @media (max-width: 800px) {

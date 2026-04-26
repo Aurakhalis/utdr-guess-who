@@ -350,7 +350,8 @@ const L_MENU_MAIN_OPTIONS = [MENU_START_LINK, MENU_NAME_LINK, MENU_INSTRUCTIONS_
 
 const MENU_CHARSET_LABEL = document.getElementById("charset-label");
 const MENU_CHARSET_SELECT = document.getElementById("charset-select");
-const L_MENU_CONFIG_OPTIONS = [MENU_CHARSET_LABEL];
+const MENU_ADD_CHARSET_LINK = document.getElementById("menu-add-charset-link");
+const L_MENU_CONFIG_OPTIONS = [MENU_CHARSET_LABEL, MENU_ADD_CHARSET_LINK];
 
 const L_MENU_OPTIONS = [...L_MENU_MAIN_OPTIONS, ...L_MENU_CONFIG_OPTIONS];
 
