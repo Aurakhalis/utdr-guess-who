@@ -250,6 +250,10 @@ ul>li label:is(:focus-visible)::before {
   margin-right: 0.125rem;
 }
 
+:not(li)>a:focus-visible::before {
+  content: url("img/sHeart_0.png");
+}
+
 select,
 option,
 dialog,
